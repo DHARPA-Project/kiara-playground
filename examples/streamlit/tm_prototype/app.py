@@ -1,10 +1,17 @@
-import os
+# -*- coding: utf-8 -*-
+
 import streamlit as st
 from kiara import Kiara
 
-# Custom imports 
+# Custom imports
 from multipage import MultiPage
-from pages import files_onboarding, get_file_metadata, timestamped_corpus, tokenization, text_preprocessing
+from pages import (
+    files_onboarding,
+    get_file_metadata,
+    text_preprocessing,
+    timestamped_corpus,
+    tokenization,
+)
 
 app = MultiPage()
 

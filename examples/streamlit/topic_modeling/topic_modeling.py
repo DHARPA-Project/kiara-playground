@@ -125,7 +125,9 @@ if table.item_is_valid():
     st.write(table.get_value_data().to_pandas())
 
 # and also print out the other current inputs
-st.write(f"## Used inputs:\n\n  - earliest: {slider[0]}\n  - latest: {slider[1]}\n  - Languages: {', '.join(languages)}")
+st.write(
+    f"## Used inputs:\n\n  - earliest: {slider[0]}\n  - latest: {slider[1]}\n  - Languages: {', '.join(languages)}"
+)
 # st.write(num_topic)
 # st.write(compute_coherence)
 

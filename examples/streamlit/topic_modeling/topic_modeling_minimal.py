@@ -4,11 +4,9 @@
 import os
 
 import streamlit as st
-
 from kiara import Kiara
-from kiara_modules.playground.markus.streamlit import (
-    onboard_file_bundle,
-)
+
+from kiara_modules.playground.markus.streamlit import onboard_file_bundle
 
 st.title("Kiara/streamlit experiment - Topic modelling minimal")
 

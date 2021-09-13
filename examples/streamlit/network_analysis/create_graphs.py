@@ -8,8 +8,8 @@ import os
 import typing
 
 import streamlit as st
-
 from kiara import Kiara
+
 from kiara_modules.playground.markus.streamlit import (
     find_all_aliases_of_type,
     init_session,
@@ -41,6 +41,7 @@ def table_mgmt(kiara: Kiara):
         for a in all_table_aliases:
             st.sidebar.write(a)
 
+
 def graphs_list(kiara: Kiara):
 
     st.sidebar.write("## All your graphs:")
@@ -51,8 +52,8 @@ def graphs_list(kiara: Kiara):
         for a in all_graph_aliases:
             st.sidebar.write(a)
 
-def create_graph(kiara: Kiara):
 
+def create_graph(kiara: Kiara):
     def create_graph(
         alias, edges, nodes, source_column, target_column, weight_column, node_index
     ):
@@ -89,7 +90,6 @@ def create_graph(kiara: Kiara):
 
         return ("CREATED GRAPH", None)
 
-
     def get_table_column_names(table_id):
 
         if not table_id:
@@ -99,7 +99,6 @@ def create_graph(kiara: Kiara):
             return []
         return md.metadata["table"]["metadata_item"]["column_names"]
 
-
     def find_likely_index(options: typing.Iterable, keyword: str):
 
         for idx, alias in enumerate(options):
@@ -107,7 +106,6 @@ def create_graph(kiara: Kiara):
                 return idx
 
         return 0
-
 
     graph = None
 
@@ -165,6 +163,7 @@ def create_graph(kiara: Kiara):
         "network.graph.properties", inputs={"graph": graph}, resolve_result=True
     )
     st.write(props)
+
 
 table_mgmt(kiara=kiara_obj)
 create_graph(kiara=kiara_obj)

@@ -2,12 +2,13 @@
 import typing
 
 from kiara import KiaraModule
-from kiara.data.values import ValueSchema, ValueSet
-from kiara.module_config import ModuleTypeConfig
+from kiara.data.values import ValueSchema
+from kiara.data.values.value_set import ValueSet
+from kiara.module_config import ModuleTypeConfigSchema
 from pydantic import Field
 
 
-class ExampleModuleConfig(ModuleTypeConfig):
+class ExampleModuleConfig(ModuleTypeConfigSchema):
 
     separator: str = Field(
         description="The seperator between the two strings.", default=" - "

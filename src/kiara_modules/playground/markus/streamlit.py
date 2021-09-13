@@ -62,7 +62,7 @@ def set_workflow_input(workflow: KiaraWorkflow, process: bool = False, **inputs)
 
 def process_to_stage(workflow: KiaraWorkflow, stage_nr: int):
 
-    controller: BatchControllerManual = workflow.pipeline.controller
+    controller: BatchControllerManual = workflow.pipeline.controller  # type: ignore
     controller.process_stage(stage_nr=stage_nr)
 
 
@@ -77,9 +77,10 @@ def get_step_output(workflow, step_id: str, output_name: str) -> Value:
 def find_all_aliases_of_type(kiara: Kiara, value_type: str) -> typing.List[str]:
 
     result = []
-    for alias in kiara.data_store.aliases:
-        md = kiara.data_store.get_metadata_for_id(alias)
-        if md.value_type == value_type:
+    for alias in kiara.data_store.alias_names:
+        v_obj = kiara.data_store.get_value_obj(alias)
+        assert v_obj is not None
+        if v_obj.type_name == value_type:
             result.append(alias)
 
     return result
@@ -92,36 +93,31 @@ def import_bytes(kiara: Kiara, uploaded_file: UploadedFile):
         with open(path, "wb") as f:
             f.write(uploaded_file.getbuffer())
 
-        if uploaded_file.name.endswith(".csv"):
-            kiara.run(
-                "table.import.from_local_file",
-                inputs={
-                    "path": path,
-                    "aliases": [uploaded_file.name[0:-4]],
-                    "file_aliases": [uploaded_file.name],
-                },
-            )
-        else:
-            kiara.run(
-                "import.local_file",
-                inputs={"path": path, "aliases": [uploaded_file.name]},
-            )
+        imported: ValueSet = kiara.run(  # type: ignore
+            "file.import_from.local.file_path",
+            inputs={"source": path},
+        )
+        file_item = imported.get_value_obj("value_item")
+        assert file_item is not None
+        file_item.save(aliases=[uploaded_file.name.replace(".", "__")])
 
 
 def onboard_file(kiara: Kiara, uploaded_file):
 
     if uploaded_file:
         if isinstance(uploaded_file, UploadedFile):
-            if uploaded_file.name not in kiara.data_store.aliases:
+            if uploaded_file.name not in kiara.data_store.alias_names:
                 import_bytes(kiara=kiara, uploaded_file=uploaded_file)
         else:
             for x in uploaded_file:
-                if x.name in kiara.data_store.aliases:
+                if x.name in kiara.data_store.alias_names:
                     continue
                 import_bytes(kiara=kiara, uploaded_file=x)
 
 
-def onboard_file_bundle(kiara: Kiara, uploaded_files, aliases: typing.Optional[typing.Iterable[str]]=None):
+def onboard_file_bundle(
+    kiara: Kiara, uploaded_files, aliases: typing.Optional[typing.Iterable[str]] = None
+):
 
     if not uploaded_files:
         return
@@ -139,13 +135,13 @@ def onboard_file_bundle(kiara: Kiara, uploaded_files, aliases: typing.Optional[t
     with tempfile.TemporaryDirectory() as tmpdirname:
         for uf in uploaded_files:
             path = os.path.join(tmpdirname, uf.name)
-            with open(path, 'wb') as f:
+            with open(path, "wb") as f:
                 f.write(uf.getbuffer())
 
         inputs = {
             "path": tmpdirname,
             "aliases": aliases,
-            "file_bundle_aliases": bundle_aliases
+            "file_bundle_aliases": bundle_aliases,
         }
         kiara.run("table.import.from_local_folder", inputs=inputs)
 
@@ -203,7 +199,7 @@ class MultiPageApp(object):
     def run(self):
         # Drodown to select the page to run
         page = self._streamlit.sidebar.selectbox(
-            'Step navigation',
+            "Step navigation",
             self._pages.keys(),
         )
 

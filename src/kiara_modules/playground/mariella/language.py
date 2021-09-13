@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
 import typing
 
-from pandas import Series
-
 from kiara import KiaraModule
-from kiara.data.values import ValueSchema, ValueSet
+from kiara.data.values import ValueSchema
+from kiara.data.values.value_set import ValueSet
 from kiara.exceptions import KiaraProcessingException
+from pandas import Series
 
 
 class TokenizeModule(KiaraModule):
-
     def create_input_schema(
         self,
     ) -> typing.Mapping[
@@ -23,13 +23,13 @@ class TokenizeModule(KiaraModule):
             "column_name": {
                 "type": "string",
                 "doc": "The name of the column that contains the content to tokenize.",
-                "default": "content"
+                "default": "content",
             },
             "tokenize_by_word": {
                 "type": "boolean",
                 "doc": "Whether to tokenize by word (default), or character.",
-                "default": True
-            }
+                "default": True,
+            },
         }
 
     def create_output_schema(
@@ -41,7 +41,7 @@ class TokenizeModule(KiaraModule):
         return {
             "tokens_array": {
                 "type": "array",
-                "doc": "The tokenized content, as an array of lists of strings."
+                "doc": "The tokenized content, as an array of lists of strings.",
             }
         }
 
@@ -54,7 +54,9 @@ class TokenizeModule(KiaraModule):
         tokenize_by_word: bool = inputs.get_value_data("tokenize_by_word")
 
         if column_name not in table.column_names:
-            raise KiaraProcessingException(f"Can't tokenize table: input table does not have a column named '{column_name}'.")
+            raise KiaraProcessingException(
+                f"Can't tokenize table: input table does not have a column named '{column_name}'."
+            )
 
         column: pa.Array = table.column(column_name)
 
@@ -63,9 +65,9 @@ class TokenizeModule(KiaraModule):
         pandas_series: Series = column.to_pandas()
 
         tokenized = pandas_series.apply(lambda x: nltk.word_tokenize(x))
-        
-        #print(tokenized)
-        #print("=========================================")
+
+        # print(tokenized)
+        # print("=========================================")
 
         # this is how you can get a Pandas Series from the column
         # print("=========================================")
@@ -79,8 +81,7 @@ class TokenizeModule(KiaraModule):
         # below is just a fake result, but should give you an idea how to do it
         # fake_result = [['x', 'y'], ['a', 'b'], ['c', 'd']]
         # fake_result_series = Series(fake_result)
-        
+
         result_array = pa.Array.from_pandas(tokenized)
 
         outputs.set_values(tokens_array=result_array)
-

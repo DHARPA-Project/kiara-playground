@@ -2,7 +2,8 @@
 import typing
 
 from kiara import KiaraModule
-from kiara.data.values import ValueSchema, ValueSet
+from kiara.data.values import ValueSchema
+from kiara.data.values.value_set import ValueSet
 from kiara_modules.core.metadata_schemas import FileMetadata
 from pandas import DataFrame
 from pyarrow import csv

@@ -1,27 +1,37 @@
+# -*- coding: utf-8 -*-
 import os
-import typing
 
-from kiara import Kiara
-import streamlit as st
 import pyarrow as pa
+import streamlit as st
+from kiara import Kiara
 from kiara.data import Value
-from streamlit_observable import observable
 
 
 def augment_table(kiara: Kiara, table_value: Value):
 
     pipeline_file = os.path.join(
-        os.path.dirname(__file__), "..", "..", "..", "newspaper_corpora", "augment_newspaper_corpora_table.json"
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "..",
+        "newspaper_corpora",
+        "augment_newspaper_corpora_table.json",
     )
 
     workflow = kiara.create_workflow(pipeline_file)
     workflow.inputs.set_value("value_id", table_value.id)
     return workflow.outputs.get_value_obj("table")
 
+
 def run_sql(kiara: Kiara, table_value: Value, unit: str):
 
     pipeline_file = os.path.join(
-        os.path.dirname(__file__), "..", "..", "..", "newspaper_corpora", f"query_newspaper_corpora_{unit}.json"
+        os.path.dirname(__file__),
+        "..",
+        "..",
+        "..",
+        "newspaper_corpora",
+        f"query_newspaper_corpora_{unit}.json",
     )
     workflow = kiara.create_workflow(pipeline_file)
     workflow.inputs.set_value("value_id", table_value.id)
@@ -31,7 +41,7 @@ def run_sql(kiara: Kiara, table_value: Value, unit: str):
 
 def page(kiara: Kiara):
 
-    if  hasattr(st.session_state, "selected_corpus_name"):
+    if hasattr(st.session_state, "selected_corpus_name"):
         selected = st.session_state.selected_corpus_name
     else:
         selected = None
@@ -59,10 +69,8 @@ def page(kiara: Kiara):
     # st.dataframe(augmented_table.get_value_data())
     # st.dataframe(augmented_table.get_value_data())
 
-
     # table = table_value.get_value_data()
     # st.dataframe(table.to_pandas())
-
 
     # data = list(df.to_dict(orient="index").values())
     # data_json = json.dumps(data, default=str)
