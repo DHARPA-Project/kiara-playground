@@ -8,7 +8,7 @@ from kiara import Kiara
 
 # before running this, the dataset must be imported into the local kiara data store, with the id_or_alias 'df_distrib':
 #
-# kiara run table.import.from_local_file path=/home/markus/projects/dharpa/kiara_modules.playground/data/mariella/v2/df_distrib-3.csv ids_or_aliases=df_distrib
+# kiara run table.import.from_local_file path=/home/markus/projects/dharpa/kiara-playground/data/mariella/v2/df_distrib-3.csv ids_or_aliases=df_distrib
 from kiara.data import Value
 from pandas import DataFrame
 from streamlit_observable import observable

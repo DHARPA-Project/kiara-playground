@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Top-level package for kiara_modules.playground."""
+"""Top-level package for kiara-playground."""
 
 
 import logging
@@ -21,15 +21,15 @@ KIARA_METADATA = {
     "references": {
         "source_repo": {
             "desc": "The module package git repository.",
-            "url": "https://github.com/DHARPA-Project/kiara_modules.playground",
+            "url": "https://github.com/DHARPA-Project/kiara-playground",
         },
         "documentation": {
             "desc": "The url for the module package documentation.",
-            "url": "https://dharpa.org/kiara_modules.playground/",
+            "url": "https://dharpa.org/kiara-playground/",
         },
     },
     "tags": ["playground"],
-    "labels": {"package": "kiara_modules.playground"},
+    "labels": {"package": "kiara-playground"},
 }
 
 

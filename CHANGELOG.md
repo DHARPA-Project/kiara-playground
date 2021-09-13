@@ -4,4 +4,4 @@ Changelog
 
 ## Version 0.0.1 (Upcoming)
 
-- first release of *kiara_modules.playground*
+- first release of **

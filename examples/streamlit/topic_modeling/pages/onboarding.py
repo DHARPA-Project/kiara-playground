@@ -20,7 +20,7 @@ def page(kiara: Kiara):
     with st.form(key="onboard_corpus"):
 
         st.markdown("## Onboard text corpus")
-        st.markdown("Select sample data from one publication folder located in  kiara_modules.playground/examples/newspaper_corpora/CI_newspaper_subcorpora")
+        st.markdown("Select sample data from one publication folder located in  kiara-playground/examples/newspaper_corpora/CI_newspaper_subcorpora")
         st.markdown("Once you're ready, go to the next step via select box on the left")
 
         alias = st.text_input("Corpus name")

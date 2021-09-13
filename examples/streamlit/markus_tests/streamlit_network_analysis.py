@@ -21,7 +21,7 @@ else:
 if "workflow" not in st.session_state:
     print("CREATE WORKFLOW")
     workflow: KiaraWorkflow = kiara.create_workflow(
-        "/home/markus/projects/dharpa/kiara_modules.playground/examples/pipelines/network_analysis_end_to_end.json"
+        "/home/markus/projects/dharpa/kiara-playground/examples/pipelines/network_analysis_end_to_end.json"
     )
     st.session_state["workflow"] = workflow
 else:

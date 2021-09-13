@@ -1,16 +1,16 @@
-[![PyPI status](https://img.shields.io/pypi/status/kiara_modules.playground.svg)](https://pypi.python.org/pypi/kiara/)
-[![PyPI version](https://img.shields.io/pypi/v/kiara_modules.playground.svg)](https://pypi.python.org/pypi/kiara/)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara_modules.playground.svg)](https://pypi.python.org/pypi/kiara/)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FDHARPA-Project%2Fkiara%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev/DHARPA-Project/kiara_modules.playground/goto?ref=develop)
-[![Coverage Status](https://coveralls.io/repos/github/DHARPA-Project/kiara_modules.playground/badge.svg?branch=develop)](https://coveralls.io/github/DHARPA-Project/kiara_modules.playground?branch=develop)
+[![PyPI status](https://img.shields.io/pypi/status/kiara-playground.svg)](https://pypi.python.org/pypi/kiara/)
+[![PyPI version](https://img.shields.io/pypi/v/kiara-playground.svg)](https://pypi.python.org/pypi/kiara/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara-playground.svg)](https://pypi.python.org/pypi/kiara/)
+[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FDHARPA-Project%2Fkiara%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev/DHARPA-Project/kiara-playground/goto?ref=develop)
+[![Coverage Status](https://coveralls.io/repos/github/DHARPA-Project/kiara-playground/badge.svg?branch=develop)](https://coveralls.io/github/DHARPA-Project/kiara-playground?branch=develop)
 [![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 # *kiara* modules (playground)
 
 A set of commonly used/useful default modules (and pipelines) for [*Kiara*](https://github.com/DHARPA-project/kiara).
 
- - Documentation: [https://dharpa.org/kiara_modules.playground](https://dharpa.org/kiara_modules.playground)
- - Code: [https://github.com/DHARPA-Project/kiara_modules.playground](https://github.com/DHARPA-Project/kiara_modules.playground)
+ - Documentation: [https://dharpa.org/kiara-playground](https://dharpa.org/kiara-playground)
+ - Code: [https://github.com/DHARPA-Project/kiara-playground](https://github.com/DHARPA-Project/kiara-playground)
 
 ## Description
 
@@ -36,8 +36,8 @@ check the notes on how to setup a *Kiara* development environment under (TODO).
 For *NIX-like operating system, setting up a development environment is relatively easy:
 
 ```console
-git clone https://github.com/DHARPA-Project/kiara_modules.playground.git
-cd kiara_modules.playground
+git clone https://github.com/DHARPA-Project/kiara-playground.git
+cd kiara-playground
 python3 -m venv .venv
 source .venv/bin/activate
 make init
@@ -52,8 +52,8 @@ Once that is done, `cd` into a directory where you want this project folder to l
 
 ```console
 # make sure your virtual env is activated!!!
-git clone https://github.com/DHARPA-Project/kiara_modules.playground.git
-cd kiara_modules.playground
+git clone https://github.com/DHARPA-Project/kiara-playground.git
+cd kiara-playground
 # the next command is optional,but if you use conda it's recommended to execute it, contact me if you encounter issues with any of this
 conda install -c conda-forge python-levenshtein
 pip install --extra-index-url https://pypi.fury.io/dharpa/ -U -e .[all_dev]
@@ -75,7 +75,7 @@ The 'prepare' step from above only has to be done once. After that, to re-enable
 you'll need to navigate to the directory again (wherever that is, in your case), and run the ``source`` command from before again:
 
 ```console
-cd path/to/kiara_modules.playground
+cd path/to/kiara-playground
 source .venv/bin/activate  # if it isn't activated already, for example by the Anaconda navigator
 kiara --help  # or whatever, point is, kiara should be available for you now,
 ```

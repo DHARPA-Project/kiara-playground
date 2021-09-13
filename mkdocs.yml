@@ -1,5 +1,5 @@
-site_name: kiara_modules.playground
-repo_url: https://github.com/DHARPA-project/kiara_modules.playground
+site_name: kiara-playground
+repo_url: https://github.com/DHARPA-project/kiara-playground
 site_author: Markus Binsteiner
 docs_dir: docs
 site_dir: build/site

@@ -11,22 +11,22 @@ TODO
 
 ### [Core modules](https://dharpa.org/kiara/modules/core_modules/)
 
-{{ get_module_list_for_package('kiara_modules.playground', include_pipelines=False) }}
+{{ get_module_list_for_package('kiara-playground', include_pipelines=False) }}
 
 ### [Pipelines](https://dharpa.org/kiara/modules/pipeline_modules/)
 
-{{ get_module_list_for_package('kiara_modules.playground', include_core_modules=False) }}
+{{ get_module_list_for_package('kiara-playground', include_core_modules=False) }}
 
 
 ### Value types
 
-{{ get_value_types_for_package('kiara_modules.playground') }}
+{{ get_value_types_for_package('kiara-playground') }}
 
 ### Metadata schemas
 
-{{ get_metadata_schemas_for_package('kiara_modules.playground') }}
+{{ get_metadata_schemas_for_package('kiara-playground') }}
 
 ## Links
 
- - Documentation: [https://dharpa.org/kiara_modules.playground](https://dharpa.org/kiara_modules.playground)
- - Code: [https://github.com/DHARPA-Project/kiara_modules.playground](https://github.com/DHARPA-Project/kiara_modules.playground)
+ - Documentation: [https://dharpa.org/kiara-playground](https://dharpa.org/kiara-playground)
+ - Code: [https://github.com/DHARPA-Project/kiara-playground](https://github.com/DHARPA-Project/kiara-playground)

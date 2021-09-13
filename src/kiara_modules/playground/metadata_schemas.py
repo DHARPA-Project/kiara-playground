@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains the metadata models that are used in the ``kiara_modules.playground`` package.
+"""This module contains the metadata models that are used in the ``kiara-playground`` package.
 
 Metadata models are convenience wrappers that make it easier for *kiara* to find, create, manage and version metadata that
 is attached to data, as well as *kiara* modules. It is possible to register metadata using a JSON schema string, but
