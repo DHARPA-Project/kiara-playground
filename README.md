@@ -1,20 +1,9 @@
-[![PyPI status](https://img.shields.io/pypi/status/kiara-playground.svg)](https://pypi.python.org/pypi/kiara/)
-[![PyPI version](https://img.shields.io/pypi/v/kiara-playground.svg)](https://pypi.python.org/pypi/kiara/)
-[![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara-playground.svg)](https://pypi.python.org/pypi/kiara/)
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FDHARPA-Project%2Fkiara%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev/DHARPA-Project/kiara-playground/goto?ref=develop)
-[![Coverage Status](https://coveralls.io/repos/github/DHARPA-Project/kiara-playground/badge.svg?branch=develop)](https://coveralls.io/github/DHARPA-Project/kiara-playground?branch=develop)
-[![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-
 # *kiara* modules (playground)
 
-A set of commonly used/useful default modules (and pipelines) for [*Kiara*](https://github.com/DHARPA-project/kiara).
+A playground to develop proof-of-concepts and other stuff, using [*kiara*](https://github.com/DHARPA-project/kiara).
 
  - Documentation: [https://dharpa.org/kiara-playground](https://dharpa.org/kiara-playground)
  - Code: [https://github.com/DHARPA-Project/kiara-playground](https://github.com/DHARPA-Project/kiara-playground)
-
-## Description
-
-TODO
 
 ## Development
 
