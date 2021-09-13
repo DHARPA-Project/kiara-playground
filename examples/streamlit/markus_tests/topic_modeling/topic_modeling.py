@@ -49,7 +49,7 @@ st.title("Kiara/streamlit experiment - Topic modelling")
 
 # This is the workflow we are going to use, check out the json file for details.
 workflow_file = os.path.join(
-    os.path.dirname(__file__), "..", "..", "pipelines", "topic_modeling_end_to_end.json"
+    os.path.dirname(__file__), "../..", "..", "pipelines", "topic_modeling_end_to_end.json"
 )
 # this is a preparation step that:
 #  - creates the kiara session

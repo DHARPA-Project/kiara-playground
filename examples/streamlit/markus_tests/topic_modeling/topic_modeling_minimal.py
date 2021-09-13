@@ -43,7 +43,7 @@ table_value = kiara.data_store.load_value(corpus_alias)
 # load the pipeline file and create a workflow
 augment_pipeline = os.path.join(
     os.path.dirname(__file__),
-    "..",
+    "../..",
     "..",
     "newspaper_corpora",
     "augment_newspaper_corpora_table.json",
