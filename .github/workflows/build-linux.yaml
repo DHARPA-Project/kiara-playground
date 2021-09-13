@@ -18,36 +18,67 @@ jobs:
           fetch-depth: 0
       - name: install kiara_modules.playground
         run: pip install -U --pre  --extra-index-url https://gitlab.com/api/v4/projects/25344049/packages/pypi/simple --extra-index-url https://pypi.fury.io/dharpa/ .[all,dev_documentation]
-      - name: create documentation
-        run: FAIL_DOC_BUILD_ON_ERROR=true make docs
-      - name: deploy documentation to gh-pages
-        uses: JamesIves/github-pages-deploy-action@4.1.0
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: build/site
+      - run: git config --global user.email "Markus Binsteiner"
+      - run: git config --global user.name "markus@frkl.io"
+      - name: create latest documentation
+        if: ${{ ( github.ref == 'refs/heads/develop') }}
+        run: mike deploy --push latest && mike set-default --push latest
+      - name: extract tag name
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: create stable documentation
+        if: startsWith(github.ref, 'refs/tags')
+        run: FAIL_DOC_BUILD_ON_ERROR=true mike deploy --push --update-alias --title "v ${RELEASE_VERSION}" "${RELEASE_VERSION}" stable
 
-  release_package:
-    name: release python package to gemfury
-    if: ${{ github.ref == 'refs/heads/develop' }} || ${{ github.ref == 'refs/heads/main' }} || startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    env:
-        GEMFURY_PUSH_TOKEN: ${{ secrets.GEMFURY_PUSH_TOKEN }}
-    steps:
-      - name: Set up Python 3.9.1
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9.1
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: install kiara
-        run: pip install -U --extra-index-url https://gitlab.com/api/v4/projects/25344049/packages/pypi/simple --extra-index-url https://pypi.fury.io/dharpa/ -e .[all]
-      - name: install 'wheel' package
-        run: pip install -U wheel
-      - name: create packages
-        run: python setup.py sdist bdist_wheel
-      - name: upload source package
-        run: curl -F package=@$(ls dist/kiara*.tar.gz) https://${GEMFURY_PUSH_TOKEN}@dharpa.fury.land:443/pypi/
-      - name: upload wheel
-        run: curl -F package=@$(ls dist/kiara*.whl) https://${GEMFURY_PUSH_TOKEN}@dharpa.fury.land:443/pypi/
+#  release_package:
+#    name: release python package to gemfury
+#    if: ${{ github.ref == 'refs/heads/develop' }} || ${{ github.ref == 'refs/heads/main' }} || startsWith(github.ref, 'refs/tags/')
+#    runs-on: ubuntu-latest
+#    env:
+#        GEMFURY_PUSH_TOKEN: ${{ secrets.GEMFURY_PUSH_TOKEN }}
+#    steps:
+#      - name: Set up Python 3.9.1
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.9.1
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: install kiara
+#        run: pip install -U --extra-index-url https://gitlab.com/api/v4/projects/25344049/packages/pypi/simple --extra-index-url https://pypi.fury.io/dharpa/ -e .[all]
+#      - name: install 'wheel' package
+#        run: pip install -U wheel
+#      - name: create packages
+#        run: python setup.py sdist bdist_wheel
+#      - name: upload source package
+#        run: curl -F package=@$(ls dist/kiara*.tar.gz) https://${GEMFURY_PUSH_TOKEN}@dharpa.fury.land:443/pypi/
+#      - name: upload wheel
+#        run: curl -F package=@$(ls dist/kiara*.whl) https://${GEMFURY_PUSH_TOKEN}@dharpa.fury.land:443/pypi/
+#      - name: publish to PyPI
+#        if: startsWith(github.ref, 'refs/tags')
+#        uses: pypa/gh-action-pypi-publish@master
+#        with:
+#          user: __token__
+#          password: ${{ secrets.PYPI_API_TOKEN }}""
+#
+#  merge_tag_to_main:
+#    name: merge current tag to main branch
+#    runs-on: ubuntu-latest
+#    if: ${{ startsWith(github.ref, 'refs/tags') }}
+#    needs:
+#      - test-linux
+#      - mypy-linux
+#      - flake8-linux
+#    steps:
+#    - uses: actions/checkout@v2
+#      with:
+#        fetch-depth: 0
+#    - run: git config --global user.email "markus@frkl.io"
+#    - run: git config --global user.name "Markus Binsteiner"
+#    - name: extract tag name
+#      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+#    - name: checkout main branch
+#      run: git checkout main
+#    - name: merge tag
+#      run: git merge "${RELEASE_VERSION}"
+#    - name: push updated main branch
+#      run: git push https://${{ secrets.GITHUB_TOKEN }}@github.com/DHARPA-Project/kiara_modules.playground.git

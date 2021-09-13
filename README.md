@@ -2,6 +2,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/kiara_modules.playground.svg)](https://pypi.python.org/pypi/kiara/)
 [![PyPI pyversions](https://img.shields.io/pypi/pyversions/kiara_modules.playground.svg)](https://pypi.python.org/pypi/kiara/)
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FDHARPA-Project%2Fkiara%2Fbadge%3Fref%3Ddevelop&style=flat)](https://actions-badge.atrox.dev/DHARPA-Project/kiara_modules.playground/goto?ref=develop)
+[![Coverage Status](https://coveralls.io/repos/github/DHARPA-Project/kiara_modules.playground/badge.svg?branch=develop)](https://coveralls.io/github/DHARPA-Project/kiara_modules.playground?branch=develop)
 [![Code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 # *kiara* modules (playground)
@@ -32,7 +33,7 @@ check the notes on how to setup a *Kiara* development environment under (TODO).
 
 #### Linux & Mac OS X (using make)
 
-For UNI*-like operating system, setting up a development environment is relatively easy:
+For *NIX-like operating system, setting up a development environment is relatively easy:
 
 ```console
 git clone https://github.com/DHARPA-Project/kiara_modules.playground.git
