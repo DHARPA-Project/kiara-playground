@@ -45,8 +45,11 @@ def app():
         )  # an alias to make it easier to see what this value represents (the source for the table)
 
         # now we need to convert the file to a table object
-        table_convert_op = kiara.get_operation("file_bundle.convert_to.table")
-        convert_result = table_convert_op.module.run(value_item=imported_file_bundle)
+        # instead of retrieving an existing operation, we'll create our module manually here, because we want to set the 'ignore_errors' config option on it (info via `kiara module explain table.convert')
+        # when this is set to true, any files that can't be used (like .DS_Store on Mac OS X) will be ignored instead of throwing an error
+        # an alternative would be to exclude non-text files in the previous step, but that is not implemented, so we are doing it here
+        table_convert_module = kiara.create_module("table.convert", module_config={"source_type": "file_bundle", "target_type": "table", "ignore_errors": True})
+        convert_result = table_convert_module.run(value_item=imported_file_bundle)
         imported_table = convert_result.get_value_obj("value_item")
         # let's also save the table (for a potential next run)
         imported_table.save(aliases=[alias])
