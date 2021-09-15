@@ -38,7 +38,7 @@ class GrpahComponentsModule(KiaraModule):
         str, typing.Union[ValueSchema, typing.Mapping[str, typing.Any]]
     ]:
 
-        return {"graph": {"type": "network.graph", "doc": "The network graph."}}
+        return {"graph": {"type": "network_graph", "doc": "The network graph."}}
 
     def create_output_schema(
         self,
@@ -49,7 +49,7 @@ class GrpahComponentsModule(KiaraModule):
         result = {}
         if self.get_config_value("find_largest_component"):
             result["largest_component"] = {
-                "type": "network.graph",
+                "type": "network_graph",
                 "doc": "A sub-graph of the largest component of the graph.",
             }
 
