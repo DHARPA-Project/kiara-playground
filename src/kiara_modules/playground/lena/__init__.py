@@ -27,7 +27,8 @@ class FindLargestComponentsModuleConfig(ModuleTypeConfigSchema):
     )
 
 
-class GrpahComponentsModule(KiaraModule):
+class GraphComponentsModule(KiaraModule):
+    """Counts all graph components and creates new graph from largest component."""
 
     _config_cls = FindLargestComponentsModuleConfig
     _module_type_name = "graph_components"
