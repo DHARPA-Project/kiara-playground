@@ -66,10 +66,12 @@ class GraphComponentsModule(KiaraModule):
 
         if self.get_config_value("find_largest_component"):
             input_graph: Graph = inputs.get_value_data("graph")
+            print(f"INPUT: {input_graph}")
             undir_graph = nx.to_undirected(input_graph)
             undir_components = nx.connected_components(undir_graph)
             lg_component = max(undir_components, key=len)
             subgraph = input_graph.subgraph(lg_component)
+            print(f"subgraph: {subgraph}")
 
             outputs.set_values(largest_component=subgraph)
 
