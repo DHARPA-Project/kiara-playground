@@ -132,11 +132,11 @@ class CreateGraphFromEdgesTableModule(KiaraModule):
 
         if graph_type is GraphTypesEnum.undirected:
             graph_cls = nx.Graph
-        if graph_type is GraphTypesEnum.directed:
+        elif graph_type is GraphTypesEnum.directed:
             graph_cls = nx.DiGraph
-        if graph_type is GraphTypesEnum.multi_directed:
+        elif graph_type is GraphTypesEnum.multi_directed:
             raise NotImplementedError("Only 'directed' and 'undirected' graphs supported at the moment.")
-        if graph_type is GraphTypesEnum.multi_undirected:
+        elif graph_type is GraphTypesEnum.multi_undirected:
             raise NotImplementedError("Only 'directed' and 'undirected' graphs supported at the moment.")
         
 
@@ -147,4 +147,11 @@ class CreateGraphFromEdgesTableModule(KiaraModule):
             edge_attr=True,
             create_using=graph_cls,
         )
+        # print(graph)
+        # print(graph_cls)
+        # print("IN FROM_EDGES_TABLE METHOD")
+        # print("CONFIG")
+        # print(self.config)
+        # print("INPUTS")
+        # print(inputs.get_all_value_data())
         outputs.set_value("graph", graph)
