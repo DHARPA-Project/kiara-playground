@@ -6,19 +6,20 @@ from kiara import Kiara
 # Custom imports
 from multipage import MultiPage
 from pages import (
-    file_onboarding
+    file_onboarding, map
 )
 
 app = MultiPage()
 
 # Title of the main page
-st.title("TM Streamlit test")
+st.title("Geolocation Streamlit prototype")
 
 kiara = Kiara.instance()
 st.session_state["kiara"] = kiara
 
 # Add all your application here
 app.add_page("1. Onboard data", file_onboarding.app)
+app.add_page("2. Map statistics", map.app)
 
 # The main app
 app.run()
