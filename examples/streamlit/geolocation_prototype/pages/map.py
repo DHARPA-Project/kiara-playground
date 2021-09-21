@@ -28,7 +28,7 @@ def app():
     observers = observable(
             "Test",
             notebook="@mariellacc/geolocation",
-            targets=["viewof map"],
+            targets=["container", "svgLayer", "canvasLayer"],
             redefine={
                 "data": cleaned_data,
             },
