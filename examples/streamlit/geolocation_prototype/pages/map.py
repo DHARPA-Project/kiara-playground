@@ -28,6 +28,7 @@ def app():
     observers = observable(
             "Test",
             notebook="@mariellacc/geolocation",
+            targets=["viewof map"],
             redefine={
                 "data": cleaned_data,
             },
@@ -36,13 +37,13 @@ def app():
 
     unmapItems = observers.get("unmapItems")
 
-    print(unmapItems)
+    #print(unmapItems)
 
     if unmapItems is None:
         st.write("All observations mappable")
     
     if unmapItems is not None:
-        print(unmapItems)
+        #print(unmapItems)
         st.write('Unmappable observations')
         st.dataframe(unmapItems)
 
