@@ -28,30 +28,4 @@ def app():
         st.session_state.map = json.dumps(map, default=str)
 
         st.session_state.map_display = 1
-    
-    if st.session_state.map_display == 1:
-
-        my_expander = st.sidebar.expander(label='Settings')
-        
-        with my_expander:
-            unit = st.selectbox("Projection", ('Mercator', 'Equal Earth', 'Geo Orthographic'))
-            selection = st.button("Confirm Selection")
-            if selection:
-                st.session_state.map_projection  == unit
-
-
-
-        observers = observable(
-            "Test",
-            notebook="@mariellacc/basemap-projections",
-            targets=["viewof svgLayer"],
-            redefine={
-                  "mapData": st.session_state.map,
-                  "chooseProjection": unit
-              },
-        )
-
-        
-        
-        
-      
+        st.write("Map data loaded!")
