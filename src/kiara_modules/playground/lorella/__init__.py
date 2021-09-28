@@ -9,7 +9,7 @@ import os
 from kiara import KiaraEntryPointItem, find_kiara_modules_under
 
 KIARA_METADATA = {
-    "authors": [{"name": "Lorella Viola", "email": "YOUR EMAIL"}]
+    "authors": [{"name": "Lorella Viola", "email": "lorella.viola@uni.lu"}]
 }
 
 from kiara import KiaraModule
