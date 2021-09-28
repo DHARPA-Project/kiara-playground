@@ -8,9 +8,10 @@ def app():
     kiara: Kiara = st.session_state["kiara"]
 
     st.write("Enter local path to geolocation example file:")
-    st.write("Example: <local path>/kiara-playground/examples/data/geolocation.csv")
 
-    path = st.text_input("Path to files folder")
+    st.write("Example: <local path>/kiara-playground/examples/data/geolocation/geolocation.csv")
+
+    path = st.text_input("Path to file")
 
     button = st.button("Onboard")
 
