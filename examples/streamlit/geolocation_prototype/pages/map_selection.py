@@ -17,7 +17,7 @@ def app():
 
     button = st.button("Load map")
 
-    st.session_state.map_projection = "Mercator"
+    #st.session_state.map_projection = "Mercator"
 
     if "map_display" not in st.session_state:
         st.session_state.map_display = 0
@@ -28,4 +28,4 @@ def app():
         st.session_state.map = json.dumps(map, default=str)
 
         st.session_state.map_display = 1
-        st.write("Map data loaded!")
+        st.write("Map data succesfully added!")
