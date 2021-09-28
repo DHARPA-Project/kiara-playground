@@ -34,8 +34,8 @@ def app():
     # create table with unique lats & longs and count, to only draw one point per
     # location on map (and avoid perf issues as nr of points impacts perf)
     # Quantity can then be visualised either by darker color when many points at same
-    # place or by scaling points size
-    query_result_unique = query_module.module.run(table=table_value, query=sql_query_unique_points)
+    # place or by scaling points size. (query is done on not null items)
+    query_result_unique = query_module.module.run(table=query_result_table, query=sql_query_unique_points)
     query_result_unique_value = query_result_unique.get_value_obj("query_result")
     query_result_unique_table = query_result_unique_value.get_value_data()
     data_unique = list(query_result_unique_table.to_pandas().to_dict(orient="index").values())
@@ -50,14 +50,14 @@ def app():
         unit = st.selectbox("Projection", ('Mercator', 'Equal Earth', 'Geo Orthographic'))
 
     map_points = observable(
-            "Test",
+            "geolocation map",
             notebook="@mariellacc/geolocation",
             targets=["container", "svgLayer", "canvasLayer"],
             redefine={ 
-                "userData": cleaned_data,
-                "uniqueLatLong": data_unique_json,
+                #"userData": cleaned_data,
                 "mapData": map_json,
                 "chooseProjection": unit,
+                "uniqueLatLong": data_unique_json,
             },
             observe=["unmapItems"],
         )
