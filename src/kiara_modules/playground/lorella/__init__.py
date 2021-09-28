@@ -8,10 +8,9 @@ import os
 
 from kiara import KiaraEntryPointItem, find_kiara_modules_under
 
-__author__ = """Lorella Viola"""
-__email__ = "lorella.viola@uni.lu"
-
-
+KIARA_METADATA = {
+    "authors": [{"name": "Lorella Viola", "email": "YOUR EMAIL"}]
+}
 
 from kiara import KiaraModule
 
@@ -42,7 +41,8 @@ class MyFirstModule(KiaraModule):
         import nltk
         from nltk.tokenize import sent_tokenize, word_tokenize
         import pandas as pd
-        import pyarrow as pa       
+        import pyarrow as pa
+       
 
         text_file = inputs.get_value_data("text_file") #using kiara command to retrieve data
         
