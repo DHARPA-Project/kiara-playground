@@ -46,9 +46,28 @@ def app():
     map_json = st.session_state.map
     my_expander = st.sidebar.expander(label='Settings')
 
+    #table_columns = table_value.get_value_data().to_pandas().columns
+    table_columns = table_value.get_value_data().column_names
+    table_columns.insert(0, 'None')
+
     with my_expander:
         unit = st.selectbox("Projection", ('Mercator', 'Equal Earth', 'Geo Orthographic'))
         scale = st.selectbox("Scale overlapping points", ('Color', 'Size'))
+        
+        categorize = st.selectbox("Select column to categorize", table_columns)
+        
+        if categorize != 'None':
+            st.write('work in progress')
+            #sql_query_col_unique = f"SELECT COUNT(DISTINCT {categorize}) AS count FROM data"
+            #sql_query_col_unique_result = query_module.module.run(table=table_value, query=sql_query_col_unique)
+            #sql_query_col_unique_result_value = sql_query_col_unique_result.get_value_obj("query_result")
+
+
+    
+    # query to check if selected column contains less than 11 values (maximum in colorbrewer color scales)
+    # as the categories will be represented as colors, it wouldn't make sense visually to allow for more
+    #sql_query_col_unique = "SELECT COUNT(DISTINCT column_name) AS some_alias FROM table_name"
+
 
     map_points = observable(
             "geolocation map",
