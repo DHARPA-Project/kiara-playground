@@ -48,14 +48,16 @@ def app():
 
     with my_expander:
         unit = st.selectbox("Projection", ('Mercator', 'Equal Earth', 'Geo Orthographic'))
+        scale = st.selectbox("Scale overlapping points", ('Color', 'Size'))
 
     map_points = observable(
             "geolocation map",
             notebook="@mariellacc/geolocation",
             targets=["container", "svgLayer", "canvasLayer"],
             redefine={ 
-                #"userData": cleaned_data,
+                "userData": cleaned_data,
                 "mapData": map_json,
+                "chooseScale": scale,
                 "chooseProjection": unit,
                 "uniqueLatLong": data_unique_json,
             },
