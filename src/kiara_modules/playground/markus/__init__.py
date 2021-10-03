@@ -4,7 +4,7 @@ import typing
 from kiara import KiaraModule
 from kiara.data.values import ValueSchema
 from kiara.data.values.value_set import ValueSet
-from kiara_modules.core.metadata_schemas import FileMetadata
+from kiara_modules.core.metadata_schemas import KiaraFile
 from pandas import DataFrame
 from pyarrow import csv
 
@@ -47,7 +47,7 @@ class CreateGraphFromFileModule(KiaraModule):
 
     def process(self, inputs: ValueSet, outputs: ValueSet) -> None:
 
-        input_file: FileMetadata = inputs.get_value_data("file")
+        input_file: KiaraFile = inputs.get_value_data("file")
         imported_data = csv.read_csv(input_file.path)
 
         if self.get_config_value("allow_column_filter"):

@@ -16,7 +16,7 @@ log = logging.getLogger("kiara_modules")
 modules: KiaraEntryPointItem = (find_kiara_modules_under, ["kiara_modules.playground"])
 
 KIARA_METADATA = {
-    "authors": [{"name": __author__, "email": __email__}],
+    "authors": [],
     "description": "Kiara modules for: playground",
     "references": {
         "source_repo": {

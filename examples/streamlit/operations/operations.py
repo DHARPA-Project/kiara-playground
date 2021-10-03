@@ -2,11 +2,12 @@
 import streamlit as st
 
 import kiara_streamlit
-from kiara_streamlit import KiaraContext
+from kiara_streamlit import KiaraStreamlit
+
+st.set_page_config(page_title="Kiara experiment: dynamic operation", layout="centered")
 
 kiara_streamlit.init()
 
-st.set_page_config(page_title="Kiara experiment: dynamic operation", layout="centered")
 
 st.header("Dynamic module input/output generation")
 
@@ -37,7 +38,7 @@ Some operations that are interesting to try out:
 """
 
 
-ktx: KiaraContext = st.get_ktx()
+ktx: KiaraStreamlit = st.kiara
 
 st.markdown(desc)
 
