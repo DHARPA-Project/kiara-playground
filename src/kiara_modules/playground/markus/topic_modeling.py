@@ -63,6 +63,7 @@ class TokenizeModuleMarkus(KiaraModule):
         import nltk
         import vaex
         import warnings
+        import numpy as np
         warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 
         df = vaex.from_arrow_table(table)
