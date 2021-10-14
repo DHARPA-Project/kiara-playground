@@ -61,7 +61,13 @@ def app():
             #sql_query_col_unique = f"SELECT COUNT(DISTINCT {categorize}) AS count FROM data"
             #sql_query_col_unique_result = query_module.module.run(table=table_value, query=sql_query_col_unique)
             #sql_query_col_unique_result_value = sql_query_col_unique_result.get_value_obj("query_result")
+        
+        zoom_options = {"zoom_on": "Zoom on", "zoom_fr": "Zoom freeze", "zoom_off": "Zoom off/reset"}
 
+        def format_func(option):
+            return zoom_options[option]
+
+        zoom = st.selectbox("Zoom settings", options=list(zoom_options.keys()), format_func=format_func)
 
     
     # query to check if selected column contains less than 11 values (maximum in colorbrewer color scales)
@@ -79,6 +85,7 @@ def app():
                 "chooseScale": scale,
                 "chooseProjection": unit,
                 "uniqueLatLong": data_unique_json,
+                "zoomOptions": zoom
             },
             observe=["unmapItems"],
         )
