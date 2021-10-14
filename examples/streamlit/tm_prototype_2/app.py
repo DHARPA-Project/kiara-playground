@@ -14,13 +14,11 @@ from kiara_streamlit.pipelines.pages import PipelinePage
 st.set_page_config(page_title="Kiara-streamlit auto-rendered pipeline", layout="wide")
 
 pipelines_folder = os.path.join(os.path.dirname(__file__), "pipelines")
-main_pipeline = os.path.join(pipelines_folder, "tm_pipeline.yaml")
-
 kiara_streamlit.init(kiara_config={"extra_pipeline_folders": [pipelines_folder]})
 
 
 # =======================================================================================
-# create one class per page
+# create one class per page, the only method that needs to be implemented is 'run_page'
 
 class OnboardingPage(PipelinePage):
 
@@ -76,6 +74,7 @@ class OnboardingPage(PipelinePage):
         else:
             if show_table:
                 st.write("Corpus not ready yet.")
+
 
 class AugmentCorpusMetadataPage(PipelinePage):
 
@@ -335,6 +334,11 @@ class TextPreprocessingPage(PipelinePage):
             st.dataframe(df.head(50))
         else:
             st.write("No result")
+
+# ===============================================================================================================
+# main app
+
+main_pipeline = os.path.join(pipelines_folder, "tm_pipeline.yaml")
 
 app = PipelineApp.create(
     pipeline=main_pipeline
