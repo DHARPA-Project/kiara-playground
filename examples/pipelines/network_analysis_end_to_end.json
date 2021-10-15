@@ -24,14 +24,14 @@
       }
     },
     {
-      "module_type":  "network.graph.from_edges_table",
+      "module_type":  "network_graph.from_edges_table",
       "step_id": "create_graph",
       "input_links": {
         "edges_table": "load_edges_table.table"
       }
     },
     {
-      "module_type": "network.graph.augment",
+      "module_type": "network_graph.augment",
       "step_id": "augment_graph",
       "input_links": {
         "graph": "create_graph.graph",
@@ -39,14 +39,14 @@
       }
     },
     {
-      "module_type": "network.graph.properties",
+      "module_type": "network_graph.properties",
       "step_id": "extract_graph_properties",
       "input_links": {
         "graph": "augment_graph.graph"
       }
     },
     {
-      "module_type": "network.graph.components",
+      "module_type": "network_graph.components",
       "step_id": "analyse_graph_components",
       "input_links": {
         "graph": "augment_graph.graph"
