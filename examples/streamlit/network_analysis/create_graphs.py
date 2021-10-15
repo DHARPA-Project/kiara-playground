@@ -90,11 +90,11 @@ def create_graph(kiara: Kiara):
 
         return ("CREATED GRAPH", None)
 
-    def get_table_column_names(table_id):
+    def get_table_column_names(id):
 
-        if not table_id:
+        if not id:
             return []
-        md = kiara.data_store.get_metadata_for_id(table_id)
+        md = kiara.data_store.get_value_obj(id)
         if not md:
             return []
         return md.metadata["table"]["metadata_item"]["column_names"]
@@ -126,7 +126,7 @@ def create_graph(kiara: Kiara):
     default_source_name = find_likely_index(edge_column_names, "source")
     default_target_name = find_likely_index(edge_column_names, "target")
     default_weight_name = find_likely_index(edge_column_names, "weight")
-    default_id_name = find_likely_index(nodes_column_names, "id")
+    default_id_name = find_likely_index(nodes_column_names, "Id")
 
     source_column_name = st.selectbox(
         "Source column name", edge_column_names, index=default_source_name
@@ -160,7 +160,7 @@ def create_graph(kiara: Kiara):
     st.write("Graph properties")
 
     props = kiara.run(
-        "network.graph.properties", inputs={"graph": graph}, resolve_result=True
+        "network_graph.properties", inputs={"graph": graph}, resolve_result=True
     )
     st.write(props)
 
