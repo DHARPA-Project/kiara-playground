@@ -341,7 +341,7 @@ class TextPreprocessingPage(PipelinePage):
 main_pipeline = os.path.join(pipelines_folder, "tm_pipeline.yaml")
 
 app = PipelineApp.create(
-    pipeline=main_pipeline
+    pipeline=main_pipeline, config={"show_pipeline_status": True, "show_prev_and_next_buttons": True}
 )
 
 if not app.pages:
