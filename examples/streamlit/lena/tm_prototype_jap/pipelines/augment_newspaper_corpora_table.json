@@ -1,0 +1,68 @@
+{
+  "module_type_name": "corpus_table_augment",
+  "documentation": "Create augmented corpus table.",
+  "steps": [
+    {
+      "module_type": "table.cut_column",
+      "module_config": {
+        "constants": {
+          "column_name": "file_name"
+        }
+      },
+      "step_id": "extract_file_name_column"
+    },
+    {
+      "module_type": "playground.markus.topic_modeling.extract_date_and_pub_ref",
+      "module_config": {
+        "constants": {
+          "pub_name_replacement_map": {
+            "sn85066408": "L\\'Italia",
+            "2012271201": "Cronaca Sovversiva",
+            "sn84020351": "La Sentinella",
+            "sn85054967": "Il Patriota",
+            "sn84037024": "La Ragione",
+            "sn84037025": "La Rassegna",
+            "sn85055164": "La Libera Parola",
+            "sn86092310": "La Sentinella del West",
+            "sn92051386": "La Tribuna del Connecticut",
+            "sn93053873": "L\\'Indipendente"
+          }
+        }
+      },
+      "step_id": "extract_date_and_pub_ref",
+      "input_links": {
+        "file_name_array": "extract_file_name_column.array"
+      }
+    },
+    {
+      "module_type": "table.merge",
+      "module_config": {
+        "input_schema": {
+          "orig_table": {
+            "type": "table"
+          },
+          "date": {
+            "type": "array"
+          },
+          "pub_ref": {
+            "type": "array"
+          },
+          "pub_name": {
+            "type": "array"
+          }
+        }
+      },
+      "step_id": "merged_table",
+      "input_links": {
+        "date": "extract_date_and_pub_ref.dates",
+        "pub_ref": "extract_date_and_pub_ref.pub_refs",
+        "pub_name": "extract_date_and_pub_ref.pub_names"
+      }
+    }
+  ],
+  "input_aliases": {
+    "extract_file_name_column__table": "table",
+    "merged_table__orig_table": "table"
+  },
+  "output_aliases": "auto"
+}
