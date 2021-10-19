@@ -2,7 +2,7 @@ module_type_name: tm_pipeline
 steps:
   - module_type: extra.corpus_table_augment
     step_id: augment_corpus_data
-  - module_type: playground.markus.topic_modeling.tokenize_module_markus
+  - module_type: playground.mariella.language.tokenize
     module_config:
       constants:
         column_name: content
