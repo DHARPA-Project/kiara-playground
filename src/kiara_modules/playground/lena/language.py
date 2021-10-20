@@ -8,11 +8,7 @@ from kiara.exceptions import KiaraProcessingException
 from pandas import Series
 
 
-class TokenizeModule(KiaraModule):
-
-    _config_cls = TokenizeModule
-    _module_type_name = "tokenize"
-
+class TokenizeModuleLena(KiaraModule):
     def create_input_schema(
         self,
     ) -> typing.Mapping[
@@ -64,11 +60,19 @@ class TokenizeModule(KiaraModule):
 
         column: pa.Array = table.column(column_name)
 
-        import nltk
+        # import nltk
 
         pandas_series: Series = column.to_pandas()
 
-        tokenized = pandas_series.apply(lambda x: nltk.word_tokenize(x))
+        # tokenized = pandas_series.apply(lambda x: nltk.word_tokenize(x))
+
+        import fugashi
+
+        tagger = fugashi.Tagger()
+
+        tokenized = pandas_series.apply(lambda x: tagger(x))
+        print(type(tokenized))
+
 
         # print(tokenized)
         # print("=========================================")

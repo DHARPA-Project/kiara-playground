@@ -14,7 +14,7 @@ steps:
     step_id: augment_corpus_data
     input_links:
       table: convert_table.value_item
-  - module_type: playground.lena.language.tokenize
+  - module_type: playground.lena.language.tokenize_module_lena
     module_config:
       constants:
         column_name: content

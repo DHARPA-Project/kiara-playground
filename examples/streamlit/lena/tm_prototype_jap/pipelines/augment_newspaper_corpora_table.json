@@ -16,16 +16,10 @@
       "module_config": {
         "constants": {
           "pub_name_replacement_map": {
-            "sn85066408": "L\\'Italia",
-            "2012271201": "Cronaca Sovversiva",
-            "sn84020351": "La Sentinella",
-            "sn85054967": "Il Patriota",
-            "sn84037024": "La Ragione",
-            "sn84037025": "La Rassegna",
-            "sn85055164": "La Libera Parola",
-            "sn86092310": "La Sentinella del West",
-            "sn92051386": "La Tribuna del Connecticut",
-            "sn93053873": "L\\'Indipendente"
+            "sn20211019": "Allgemeine_Zeitschrift",
+            "sn20211018": "Monatsschrift_Psychiatrie",
+            "sn20211016": "Meiji",
+            "sn20211020": "Galactic_Railroad"
           }
         }
       },
