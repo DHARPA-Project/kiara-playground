@@ -41,8 +41,6 @@ class AugmentCorpusMetadataPage(PipelinePage):
         st.markdown(
             "Wait for file preview to be displayed, before proceeding to the next step"
         )
-        st.markdown("*Temporary screen for file names metadata step*")
-        st.markdown("*This module will be completed at a later stage *")
 
         process_metadata = st.radio("Do your file names contain metadata?", ("no", "yes"))
 
@@ -65,7 +63,7 @@ class AugmentCorpusMetadataPage(PipelinePage):
             table = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
             if table.item_is_valid():
                 st.write("Result preview")
-                AgGrid(table.get_value_data().to_pandas().head(50))
+                st.dataframe(table.get_value_data().to_pandas().head(50))
 
 
 class TimestampedCorpusPage(PipelinePage):
@@ -75,6 +73,9 @@ class TimestampedCorpusPage(PipelinePage):
         # this is basically unchanged from the other prototype, since it doesn't involve any processing on the actual workflow
 
         augmented_table_value = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
+        
+
+        #st.write(self.pipeline.get_current_state().dict())
 
         if not augmented_table_value.item_is_valid():
 
@@ -100,14 +101,6 @@ class TimestampedCorpusPage(PipelinePage):
             query = sql_query_month
         else:
             query = sql_query_year
-
-        # CHANGED
-        # again, it's not really necessary anymore to create a workflow for just executing a single module
-        # query_workflow = kiara.create_workflow("table.query.sql")
-        # query_workflow.inputs.set_values(table=augmented_table_value, query=query)
-        #
-        # query_result_value = query_workflow.outputs.get_value_obj("query_result")
-        # query_result_table = query_result_value.get_value_data()
 
         query_module = st.kiara.get_operation("table.query.sql")
         query_result = query_module.module.run(table=augmented_table_value, query=query)
@@ -154,7 +147,7 @@ class TimestampedCorpusPage(PipelinePage):
 
         if display_choice == "data":
 
-            AgGrid(query_result_table.to_pandas())
+            st.table(query_result_table.to_pandas())
 
         else:
 
@@ -193,16 +186,53 @@ class TimestampedCorpusPage(PipelinePage):
                 query_result_table2 = query_result_value2.get_value_data()
 
                 df2 = query_result_table2.to_pandas()
-                gb = GridOptionsBuilder.from_dataframe(df2)
 
-                gb.configure_column("content", maxWidth=800, tooltipField="content")
-
-                AgGrid(df2.head(100), gridOptions=gb.build())
+                st.dataframe(df2.head(100))
 
 
 class TokenizationPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
+
+        model = st.kiara.get_module_class('playground.mariella.language.tokenize')
+        metadata = model.get_type_metadata()
+
+        with st.expander("Code view"):
+
+            # for the moment I'm just retrieving the information in a hard coded way, without working on the layout, didn't at all optimize title display etc, the next step will be to 
+            # improve the way info are displayed (maybe using columns and/or tables, better titles sizes etc)
+            # and then generalise this to have a code that could be re-used across modules 
+            st.caption('Module title')
+            st.write(metadata.dict()['type_name'])
+            st.caption('Inputs')
+            st.caption('- Input 1')
+            #st.write(metadata.dict())
+            #st.write(self.pipeline.get_current_state().dict())
+            st.write(f"type: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['table']['value_schema']['type']}")
+            st.write(f"optional: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['table']['value_schema']['optional']}")
+            st.write(f"status: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['table']['status']}")
+            st.write(f"columns: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['table']['metadata']['table']['metadata_item']['column_names']}")
+            st.caption('- Input 2')
+            st.write(f"type: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['tokenize_by_word']['value_schema']['type']}")
+            st.write(f"optional: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['tokenize_by_word']['value_schema']['optional']}")
+            st.write(f"status: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['tokenize_by_word']['status']}")
+            # I would like to display the value that is set (either default value itself or value selected by user if it is the case)
+            st.write(f"value: {self.pipeline.get_current_state().dict()['step_inputs']['tokenization']['values']['tokenize_by_word']['value_schema']['default']}")
+            st.caption('Module information')
+            st.caption('- Module description')
+            st.write(metadata.dict()['documentation']['description'])
+            st.caption('- Module author')
+            st.write(metadata.dict()['origin']['authors'][0]['name'])
+            st.caption('- Source code')
+            st.code(metadata.dict()['process_src'])
+            st.caption('- Module repo link')
+            st.write(metadata.dict()['context']['references']['source_url']['url'])
+            st.caption('- Module doc link')
+            st.write(metadata.dict()['documentation']['doc'])
+            st.caption('Output')
+            st.write({self.pipeline.get_current_state().dict()['step_outputs']['tokenization']['values']['tokens_array']['value_schema']['doc']})
+
+
 
         st.write(
             "For languages based on latin characters, use default tokenization option (by word)."
