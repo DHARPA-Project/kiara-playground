@@ -329,6 +329,9 @@ def onboard_folder(kiara: Kiara, pipeline_folder: str, corpus_path: str, value_a
 @st.experimental_singleton
 def onboard_files(_kiara: Kiara):
 
+    import nltk
+    nltk.download('punkt')
+
     aliases = _kiara.data_store.alias_names
     if aliases:
         all_match = True
@@ -357,6 +360,7 @@ def onboard_files(_kiara: Kiara):
     return True
 
 onboarded = onboard_files(_kiara=st.kiara)
+
 
 
 # ===============================================================================================================
