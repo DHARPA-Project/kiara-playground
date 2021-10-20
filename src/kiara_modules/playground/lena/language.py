@@ -71,7 +71,10 @@ class TokenizeModuleLena(KiaraModule):
         tagger = fugashi.Tagger()
 
         tokenized = pandas_series.apply(lambda x: tagger(x))
-        print(type(tokenized))
+
+        def unidic_node_to_str(node_list):
+            return [str(node) for node in node_list]
+        stringified = pandas_series.apply(unidic_node_to_str)
 
 
         # print(tokenized)
@@ -90,6 +93,6 @@ class TokenizeModuleLena(KiaraModule):
         # fake_result = [['x', 'y'], ['a', 'b'], ['c', 'd']]
         # fake_result_series = Series(fake_result)
 
-        result_array = pa.Array.from_pandas(tokenized)
+        result_array = pa.Array.from_pandas(stringified)
 
         outputs.set_values(tokens_array=result_array)
