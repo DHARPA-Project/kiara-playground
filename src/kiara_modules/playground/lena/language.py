@@ -73,9 +73,11 @@ class TokenizeModuleLena(KiaraModule):
         tokenized = pandas_series.apply(lambda x: tagger(x))
 
         def unidic_node_to_str(node_list):
-            return [str(node) for node in node_list]
-        stringified = pandas_series.apply(unidic_node_to_str)
+            return [str(word) for word in node_list]
 
+        #stringified = pandas_series.apply(unidic_node_to_str)
+
+        stringified = unidic_node_to_str(tokenized)
 
         # print(tokenized)
         # print("=========================================")
