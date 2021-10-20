@@ -1,0 +1,25 @@
+module_type_name: tm_pipeline
+steps:
+  - module_type: extra.corpus_table_augment
+    step_id: augment_corpus_data
+  - module_type: playground.mariella.language.tokenize
+    module_config:
+      constants:
+        column_name: content
+    step_id: tokenization
+    input_links:
+      table: augment_corpus_data.table
+  - module_type: playground.mariella.text_preprocessing.preprocess
+    step_id: text_pre_processing
+    input_links:
+      array: tokenization.tokens_array
+input_aliases:
+  augment_corpus_data__table: corpus_table
+  tokenization__tokenize_by_word: tokenize_by_word
+  text_pre_processing__lowercase: apply_lowercase
+  text_pre_processing__preprocess_method: preprocess_methodology
+  text_pre_processing__remove_short_tokens: min_token_length
+output_aliases:
+  augment_corpus_data__table: corpus_table
+  text_pre_processing__preprocessed_array: preprocessed_content
+

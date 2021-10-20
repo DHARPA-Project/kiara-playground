@@ -1,0 +1,29 @@
+module_type_name: network_analysis_streamlit
+steps:
+  - module_type: network_graph.from_edges_table
+    step_id: create_graph
+  - module_type: network_graph.augment
+    step_id: augment_graph
+    input_links:
+      graph: create_graph.graph
+  - module_type: network_graph.properties
+    step_id: graph_properties
+    input_links:
+      graph: augment_graph.graph
+input_aliases:
+  create_graph__edges_table: edges_table
+  create_graph__source_column: source_column_name
+  create_graph__target_column: target_column_name
+  create_graph__weight_column: weight_column_name
+  create_graph__graph_type: graph_type
+  augment_graph__node_attributes: nodes_table
+  augment_graph__index_column_name: index_column_name
+output_aliases:
+  augment_graph__graph: graph
+  graph_properties__number_of_nodes: number_of_nodes
+  graph_properties__number_of_edges: number_of_edges
+  graph_properties__density: density
+  graph_properties__average_degree: average_degree
+  graph_properties__average_in_degree: average_in_degree
+  graph_properties__average_out_degree: average_out_degree
+  graph_properties__average_shortest_path_length: shortest_path_length
