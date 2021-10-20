@@ -1,0 +1,7 @@
+--extra-index-url https://pypi.fury.io/dharpa
+.
+kiara
+kiara_modules.core
+kiara_modules.network_analysis
+kiara.streamlit
+streamlit-observable-dharpa

@@ -3,8 +3,16 @@
   "documentation": "Topic modelling dev pipeline.",
   "steps": [
     {
-      "module_type": "table.import_from.folder_path.string",
-      "step_id": "create_table_from_files"
+      "module_type": "file_bundle.import_from.local.folder_path",
+      "step_id": "import_file_bundle"
+    },
+    {
+      "module_type": "file_bundle.convert_to.table",
+      "step_id": "create_table_from_files",
+      "input_links":
+      {
+        "value_item": "import_file_bundle.value_item"
+      }
     },
     {
       "module_type": "array.map",
