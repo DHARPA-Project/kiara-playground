@@ -7,12 +7,6 @@ from jinja2 import FileSystemLoader, Environment
 
 import kiara_streamlit
 
-pipeline_structure = {
-    "steps": [
-        {"module_type": "logic.and", "step_id": "and"},
-        {"module_type": "logic.not", "step_id": "not", "input_links": {"a": "and.y"}},
-    ],
-}
 
 pipelines_folder = os.path.join(os.path.dirname(__file__), "pipelines")
 kiara_streamlit.init(kiara_config={"extra_pipeline_folders": [pipelines_folder]})
