@@ -1,0 +1,7 @@
+<h1>Pipeline inputs</h1>
+
+<ul>
+{% for field_name, info in pipeline_status.pipeline_inputs.values.items() %}
+  <li>{{ field_name }}: <i>{{ info.value_schema.type }}</i></li>
+{%  endfor %}
+</ul>

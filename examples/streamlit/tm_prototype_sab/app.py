@@ -361,8 +361,6 @@ def onboard_files(_kiara: Kiara):
 
 onboarded = onboard_files(_kiara=st.kiara)
 
-
-
 # ===============================================================================================================
 # main app
 
