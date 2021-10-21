@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""Create a simple 'logic nand' pipeline and display the pipeline status in different stages while inputs are set.
-"""
 import os
 
 import streamlit as st
