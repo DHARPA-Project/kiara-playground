@@ -340,6 +340,45 @@ class TextPreprocessingPage(PipelinePage):
         else:
             st.write("No result")
 
+class LemmatizeTextPage(PipelinePage):
+
+    def run_page(self, st: DeltaGenerator):
+
+        st.write("Here Lorella would write some explanation about what is happening, and why.")
+
+        button = st.button("Lemmatize")
+        if button:
+            with st.spinner("Lemmatizing tokens, this might take a while..."):
+                self.process_step("lemmatize")
+
+        lemmatized = self.get_step_outputs("lemmatize").get_value_obj(
+            "tokens_array"
+        )
+
+        if lemmatized.item_is_valid():
+            st.dataframe(lemmatized.get_value_data().to_pandas())
+
+class LDAPage(PipelinePage):
+
+    def run_page(self, st: DeltaGenerator):
+
+        st.write("Here Lorella would write some explanation about what is happening, and why.")
+
+        compute_coherence = st.checkbox("Compute coherence")
+        number_of_topics = st.slider("Number of topics", min_value=1, max_value=15)
+
+        button = st.button("Generate LDA")
+        if button:
+            self.pipeline.inputs.set_values(number_of_topics=number_of_topics, compute_coherence=compute_coherence)
+            with st.spinner("Generating LDA, this might take a while..."):
+                self.process_step("generate_lda")
+
+        topic_model = self.get_step_outputs("generate_lda").get_value_obj(
+            "topic_model"
+        )
+
+        if topic_model.item_is_valid():
+            st.dataframe(topic_model.get_value_data().to_pandas())
 
 def onboard_folder(kiara: Kiara, pipeline_folder: str, corpus_path: str, value_alias: str):
 
@@ -421,5 +460,6 @@ if not app.pages:
     app.add_page(TimestampedCorpusPage(id="Timestamped data"))
     app.add_page(TokenizationPage(id="Tokenization"))
     app.add_page(TextPreprocessingPage(id="Text pre-processing"))
-
+    app.add_page(LemmatizeTextPage(id="Lemmatize"))
+    app.add_page(LDAPage(id="LDA"))
 app.run()
