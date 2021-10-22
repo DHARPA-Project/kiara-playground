@@ -376,6 +376,7 @@ def onboard_files(_kiara: Kiara):
 
     import nltk
     nltk.download('punkt')
+    nltk.download('stopwords')
 
     aliases = _kiara.data_store.alias_names
     if aliases:
