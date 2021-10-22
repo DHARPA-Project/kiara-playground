@@ -369,7 +369,7 @@ class LDAPage(PipelinePage):
 
         button = st.button("Generate LDA")
         if button:
-            self.pipeline.inputs.set_values(num_topics=number_of_topics, compute_coherence=compute_coherence)
+            self.pipeline.inputs.set_values(number_of_topics=number_of_topics, compute_coherence=compute_coherence)
             with st.spinner("Generating LDA, this might take a while..."):
                 self.process_step("generate_lda")
 
