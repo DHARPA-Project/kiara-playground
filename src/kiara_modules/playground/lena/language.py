@@ -27,7 +27,7 @@ class TokenizeModuleLena(KiaraModule):
             },
             "tokenize_by_word": {
                 "type": "boolean",
-                "doc": "Whether to tokenize by word (default), or character.",
+                "doc": "Whether to tokenize with nltk (default), or fugashi.",
                 "default": True,
             },
         }
@@ -60,24 +60,40 @@ class TokenizeModuleLena(KiaraModule):
 
         column: pa.Array = table.column(column_name)
 
-        # import nltk
-
         pandas_series: Series = column.to_pandas()
 
-        # tokenized = pandas_series.apply(lambda x: nltk.word_tokenize(x))
+        if tokenize_by_word is True:
+            import nltk
 
-        import fugashi
+            tokenized = pandas_series.apply(lambda x: nltk.word_tokenize(x))
 
-        tagger = fugashi.Tagger()
+        elif tokenize_by_word is False:
+            import fugashi
 
-        tokenized = pandas_series.apply(lambda x: tagger(x))
+            tagger = fugashi.Tagger()
 
-        def unidic_node_to_str(node_list):
-            return [str(word) for word in node_list]
+            taggered = pandas_series.apply(lambda x: tagger(x))
+
+            def retrieve_tokens(lists):
+                return [(item.surface) for sublist in lists for item in sublist]  
+
+            tokenized = taggered.apply(lambda x: retrieve_tokens(x))
+
+            #retrieve tokenized words with item.surface and lemmas with item.featue.lemma
+            # for sublist in taggered:
+            #     for item in sublist:
+            #         print(item.surface)
+
+            #none of this worked...
+            # def unidic_node_to_str(node_list):
+            #     return [str(word) for word in node_list]
+            #tokenized = taggered.apply(lambda x: str(x))
+
+            #tokenized = unidic_node_to_str(taggered)
 
         #stringified = pandas_series.apply(unidic_node_to_str)
-
-        stringified = unidic_node_to_str(tokenized)
+        # import nltk
+        #tokenized = unidic_node_to_str(taggered)
 
         # print(tokenized)
         # print("=========================================")
@@ -95,6 +111,6 @@ class TokenizeModuleLena(KiaraModule):
         # fake_result = [['x', 'y'], ['a', 'b'], ['c', 'd']]
         # fake_result_series = Series(fake_result)
 
-        result_array = pa.Array.from_pandas(stringified)
+        result_array = pa.Array.from_pandas(tokenized)
 
         outputs.set_values(tokens_array=result_array)
