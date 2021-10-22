@@ -347,7 +347,7 @@ class PreprocessModule(KiaraModule):
                 if token is None:
                     return None
 
-            # all-number tokens are already filtered out if any of the other methods above ran
+            # all-number tokens are already filtered out if the remove_non_alpha methods above ran
             if remove_all_numeric and not remove_non_alpha:
                 token = None if token.isdigit() else token
                 if token is None:
