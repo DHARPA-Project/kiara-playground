@@ -247,7 +247,7 @@ class TokenizationPage(PipelinePage):
     def run_page(self, st: DeltaGenerator):
 
         st.write(
-            "For languages using whitespace between words (English, French, Russian, German ...), use default tokenization option (by word)."
+            "Use this method for Japanese texts, it will tokenize the text corpus by word."
         )
         st.write(
             "This first pre-processing step is necessary to proceed further. Depending on your corpus size, it could take several minutes"
