@@ -567,6 +567,60 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LDAModule" class="md-nav__link">
+    LDAModule
+  </a>
+  
+    <nav class="md-nav" aria-label="LDAModule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LDAModule.create_input_schema" class="md-nav__link">
+    create_input_schema()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LDAModule.create_output_schema" class="md-nav__link">
+    create_output_schema()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule" class="md-nav__link">
+    LemmatizeTokensArrayModule
+  </a>
+  
+    <nav class="md-nav" aria-label="LemmatizeTokensArrayModule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_input_schema" class="md-nav__link">
+    create_input_schema()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_output_schema" class="md-nav__link">
+    create_output_schema()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#kiara_modules.playground.markus.topic_modeling.PreprocessModule" class="md-nav__link">
     PreprocessModule
   </a>
@@ -781,6 +835,60 @@
         
           <li class="md-nav__item">
   <a href="#kiara_modules.playground.markus.topic_modeling.ExtractDateAndPubRefModule.create_output_schema" class="md-nav__link">
+    create_output_schema()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LDAModule" class="md-nav__link">
+    LDAModule
+  </a>
+  
+    <nav class="md-nav" aria-label="LDAModule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LDAModule.create_input_schema" class="md-nav__link">
+    create_input_schema()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LDAModule.create_output_schema" class="md-nav__link">
+    create_output_schema()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule" class="md-nav__link">
+    LemmatizeTokensArrayModule
+  </a>
+  
+    <nav class="md-nav" aria-label="LemmatizeTokensArrayModule">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_input_schema" class="md-nav__link">
+    create_input_schema()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_output_schema" class="md-nav__link">
     create_output_schema()
   </a>
   
@@ -1150,6 +1258,274 @@
 
 
 
+<h2 id="kiara_modules.playground.markus.topic_modeling.LDAModule" class="doc doc-heading">
+        <code>LDAModule</code>
+
+
+
+<a href="#kiara_modules.playground.markus.topic_modeling.LDAModule" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Perform Latent Dirichlet Allocation on a tokenized corpus.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="kiara_modules.playground.markus.topic_modeling.LDAModule.create_input_schema" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">create_input_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#kiara_modules.playground.markus.topic_modeling.LDAModule.create_input_schema" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
+<p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
+<p>{
+  "[input_field_name]: {
+      "type": "[value_type]",
+      "doc<em>": "[a description of this input]",
+      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
+  "[other_input_field_name]: {
+      "type: ...
+      ...
+  }</p>
+
+        <details class="quote">
+          <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">create_input_schema</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ValueSchema</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>
+<span class="p">]:</span>
+    <span class="n">inputs</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;tokens_array&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;The text corpus.&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;num_topics&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;integer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;The number of topics.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;compute_coherence&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;boolean&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;Whether to train the model without coherence calculation.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">inputs</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="kiara_modules.playground.markus.topic_modeling.LDAModule.create_output_schema" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">create_output_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#kiara_modules.playground.markus.topic_modeling.LDAModule.create_output_schema" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
+<p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
+<p>{
+  "[output_field_name]: {
+      "type": "[value_type]",
+      "doc*": "[a description of this output]"
+  "[other_input_field_name]: {
+      "type: ...
+      ...
+  }</p>
+
+        <details class="quote">
+          <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">create_output_schema</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ValueSchema</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>
+<span class="p">]:</span>
+
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;topic_model&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;table&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;A table with &#39;topic_id&#39; and &#39;words&#39; columns (also &#39;num_topics&#39;, if coherence calculation was switched on).&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">outputs</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h2 id="kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule" class="doc doc-heading">
+        <code>LemmatizeTokensArrayModule</code>
+
+
+
+<a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule" class="headerlink" title="Permanent link">&para;</a></h2>
+
+    <div class="doc doc-contents ">
+
+      <p>Lemmatize an array of token lists.</p>
+<p>Compared to using the <code>lemmatize_tokens</code> module in combination with <code>map</code>, this is much faster, since it uses
+a spacy <a href="https://spacy.io/api/language#pipe">pipe</a> under the hood.</p>
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_input_schema" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">create_input_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_input_schema" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
+<p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
+<p>{
+  "[input_field_name]: {
+      "type": "[value_type]",
+      "doc<em>": "[a description of this input]",
+      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
+  "[other_input_field_name]: {
+      "type: ...
+      ...
+  }</p>
+
+        <details class="quote">
+          <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">create_input_schema</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ValueSchema</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>
+<span class="p">]:</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;tokens_array&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;An array of lists of tokens.&quot;</span><span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">inputs</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_output_schema" class="doc doc-heading">
+<code class="codehilite language-python"><span class="n">create_output_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
+
+
+<a href="#kiara_modules.playground.markus.topic_modeling.LemmatizeTokensArrayModule.create_output_schema" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
+<p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
+<p>{
+  "[output_field_name]: {
+      "type": "[value_type]",
+      "doc*": "[a description of this output]"
+  "[other_input_field_name]: {
+      "type: ...
+      ...
+  }</p>
+
+        <details class="quote">
+          <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
+          <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">create_output_schema</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">ValueSchema</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]]</span>
+<span class="p">]:</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;tokens_array&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;An array of lists of lemmatized tokens.&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">outputs</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
 <h2 id="kiara_modules.playground.markus.topic_modeling.PreprocessModule" class="doc doc-heading">
         <code>PreprocessModule</code>
 
@@ -1441,6 +1817,7 @@
     </div>
 
   </div>
+
 
 
 
