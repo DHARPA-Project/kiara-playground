@@ -11,6 +11,7 @@ import kiara_streamlit
 from kiara import Kiara
 from kiara.data import Value
 from kiara.data.onboarding.batch import BatchOnboard
+from kiara_modules.language_processing.tokens import get_stopwords
 from kiara_streamlit.pipelines import PipelineApp
 from kiara_streamlit.pipelines.pages import PipelinePage
 
@@ -241,37 +242,81 @@ class TextPreprocessingPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
 
-        st.write("#### 1. Lowercase")
-        lowercase = st.selectbox(" ", ("no", "yes"), key="1")
+        left, center, right = st.columns([2, 4, 2])
+        left.write("#### 1. Lowercase")
+        lowercase = left.checkbox("Convert to lowercase")
         # isalnum,isalph,isdigit
-        st.write("#### 2. Numbers and punctuation")
-        display_preprocess = [
-            "None",
-            "Remove all tokens that include numbers (e.g. ex1ample)",
-            "Remove all tokens that include punctuation and numbers (e.g. ex1a.mple)",
-            "Remove all tokens that contain numbers only (e.g. 876)",
-        ]
-        preprocess = st.radio(
-            " ",
-            options=range(len(display_preprocess)),
-            format_func=lambda x: display_preprocess[x],
-        )
-        st.write("#### 3. Words length")
-        display_shorttokens = ["None", "1", "2", "3", "4", "5"]
-        shorttokens = st.selectbox(
+        center.write("#### 2. Numbers and punctuation")
+        remove_alphanumeric = center.checkbox("Remove all tokens that include numbers (e.g. ex1ample).")
+        remove_non_alpha = center.checkbox("Remove all tokens that include punctuation and numbers (e.g. ex1a.mple).")
+        remove_all_numeric = center.checkbox("Remove all tokens that contain numbers only (e.g. 876).")
+
+        right.write("#### 3. Words length")
+        display_shorttokens = [0, 1, 2, 3, 4, 5]
+        def _temp(token_len):
+            if token_len == 0:
+                return "Incl. all words"
+            else:
+                return str(token_len)
+        shorttokens = right.selectbox(
             "Remove words shorter than ... characters",
-            options=range(len(display_shorttokens)),
-            format_func=lambda x: display_shorttokens[x],
+            options=display_shorttokens,
+            format_func=lambda x: _temp(x),
         )
+
+        st.write("#### 4. Remove stopwords")
+        all_stopword_languages = get_stopwords().fileids()
+        stopword_left, stopword_right = st.columns([8,2])
+        languages = stopword_left.multiselect("Include stopwords for languages...", options=sorted(all_stopword_languages), help="This downloads stopword lists included in the nltk package.")
+        if languages:
+            stopwords_op = st.kiara.get_operation("playground.markus.topic_modeling.assemble_stopwords")
+            stopword_result = stopwords_op.run(languages=languages)
+            stopword_list = stopword_result.get_value_data("stopwords")
+        else:
+            stopword_list = []
+        show_stopwords = stopword_right.checkbox("Show current stopwords")
+        if show_stopwords:
+            if stopword_list:
+                stopword_right.dataframe(stopword_list)
+            else:
+                stopword_right.write("*No stopwords (yet).*")
+
+        tokens = self.get_step_outputs("tokenization")["tokens_array"]
+
+        preview = None
+        if tokens.item_is_valid():
+            sample_op = st.kiara.get_operation("array.sample.rows")
+            sample_token_array = self._cache.get("preprocess_sample_array", None)
+            if not sample_token_array:
+                sample_token_array = sample_op.run(value_item=tokens, sample_size=7).get_value_obj("sampled_value")
+                self._cache["preprocess_sample_array"] = sample_token_array
+            preview_op = st.kiara.get_operation("playground.markus.topic_modeling.preprocess")
+            inputs = {
+                "to_lowercase": lowercase,
+                "remove_alphanumeric": remove_alphanumeric,
+                "remove_non_alpha": remove_non_alpha,
+                "remove_all_numeric": remove_all_numeric,
+                "remove_short_tokens": shorttokens,
+                "remove_stopwords": stopword_list
+            }
+            preview = preview_op.run(token_lists=sample_token_array, **inputs)
+        preview_pre_processing = stopword_left.checkbox("Preview with current inputs", value=True)
+        if preview_pre_processing and preview:
+            stopword_left.dataframe(preview.get_value_data("preprocessed_token_lists").to_pandas())
+        elif preview_pre_processing:
+            stopword_left.write("No data (yet).")
 
         confirmation = st.button("Proceed")
 
         if confirmation:
 
             step_inputs = {
-                "apply_lowercase": lowercase == "yes",
-                "preprocess_methodology": preprocess,
-                "min_token_length": shorttokens
+                "to_lowercase": lowercase,
+                "remove_alphanumeric": remove_alphanumeric,
+                "remove_non_alpha": remove_non_alpha,
+                "remove_all_numeric": remove_all_numeric,
+                "remove_short_tokens": shorttokens,
+                "remove_stopwords": stopword_list
             }
             with st.spinner("Pre-processing texts..."):
                 self.set_pipeline_inputs(inputs=step_inputs)
@@ -284,7 +329,7 @@ class TextPreprocessingPage(PipelinePage):
 
         # retrieve the actual table value
         preprocessed_table_value = self.get_step_outputs("text_pre_processing").get_value_obj(
-            "preprocessed_array"
+            "preprocessed_token_lists"
         )
 
         if preprocessed_table_value.item_is_valid():
