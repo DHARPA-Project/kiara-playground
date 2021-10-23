@@ -5,3 +5,4 @@ kiara_modules.core
 kiara_modules.network_analysis
 kiara.streamlit
 streamlit-observable-dharpa
+https://github.com/explosion/spacy-models/releases/download/it_core_news_sm-3.1.0/it_core_news_sm-3.1.0-py3-none-any.whl
