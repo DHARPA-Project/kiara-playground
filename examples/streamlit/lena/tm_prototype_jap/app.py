@@ -247,17 +247,17 @@ class TokenizationPage(PipelinePage):
     def run_page(self, st: DeltaGenerator):
 
         st.write(
-            "Use this method for Japanese texts, it will tokenize the text corpus by word."
+            "Both methods will tokenize the text corpus by word. Choose Western for Western languages (English, German, French, but also Russian etc.). Choose Japanese to tokenize Japanese texts."
         )
         st.write(
             "This first pre-processing step is necessary to proceed further. Depending on your corpus size, it could take several minutes"
         )
-        tokenize = st.selectbox("Tokenize by", ("word", "character"), key="0")
+        tokenize = st.selectbox("Tokenizing Method", ("Western", "Japanese"), key="0")
         token_button = st.button("Proceed")
 
         if token_button:
 
-            self.set_pipeline_inputs(inputs={"tokenize_by_word": tokenize == "word"})
+            self.set_pipeline_inputs(inputs={"tokenizing_method": tokenize == "Western"})
             print("PROCESSING STEP: 'tokenization'")
             with st.spinner('Tokenizing corpus, this might take a while...'):
                 tokenize_result = self.process_step("tokenization")

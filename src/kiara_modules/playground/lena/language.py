@@ -25,7 +25,7 @@ class TokenizeModuleLena(KiaraModule):
                 "doc": "The name of the column that contains the content to tokenize.",
                 "default": "content",
             },
-            "tokenize_by_word": {
+            "tokenizing_method": {
                 "type": "boolean",
                 "doc": "Whether to tokenize with nltk (default), or fugashi.",
                 "default": True,
@@ -51,7 +51,7 @@ class TokenizeModuleLena(KiaraModule):
 
         table: pa.Table = inputs.get_value_data("table")
         column_name: str = inputs.get_value_data("column_name")
-        tokenize_by_word: bool = inputs.get_value_data("tokenize_by_word")
+        tokenizing_method: bool = inputs.get_value_data("tokenizing_method")
 
         if column_name not in table.column_names:
             raise KiaraProcessingException(
@@ -62,22 +62,29 @@ class TokenizeModuleLena(KiaraModule):
 
         pandas_series: Series = column.to_pandas()
 
-        if tokenize_by_word is True:
+        if tokenizing_method is True:
             import nltk
 
             tokenized = pandas_series.apply(lambda x: nltk.word_tokenize(x))
 
-        elif tokenize_by_word is False:
+        elif tokenizing_method is False:
             import fugashi
 
             tagger = fugashi.Tagger()
 
             taggered = pandas_series.apply(lambda x: tagger(x))
 
-            def retrieve_tokens(lists):
-                return [(item.surface) for sublist in lists for item in sublist]  
+            def token(x):
+                return [str(item.surface) for item in tagger(x)]
 
-            tokenized = taggered.apply(lambda x: retrieve_tokens(x))
+            #lemma is currently not used, but could be an additional output, since it can be done in the same step
+            def lemma(x):
+                return [str(item.feature.lemma) for item in tagger(x)]
+            lemmatized = pandas_series.apply(lambda x: lemma(x))
+
+            surfaced = pandas_series.apply(lambda x: token(x))  
+
+            tokenized = surfaced.apply(lambda x: str(x))
 
             #retrieve tokenized words with item.surface and lemmas with item.featue.lemma
             # for sublist in taggered:
