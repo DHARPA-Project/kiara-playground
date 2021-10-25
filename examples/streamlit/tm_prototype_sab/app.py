@@ -388,7 +388,7 @@ class LDAPage(PipelinePage):
             if not compute_coherence:
                 selected_model_idx = number_of_topics_min
             else:
-                selected_model_idx = st.selectbox("Number of topics", options=range(number_of_topics_min, number_of_topics_max))
+                selected_model_idx = st.selectbox("Number of topics", options=range(number_of_topics_min, number_of_topics_max+1))
 
             try:
                 selected_model_table = all_topic_models[selected_model_idx]
