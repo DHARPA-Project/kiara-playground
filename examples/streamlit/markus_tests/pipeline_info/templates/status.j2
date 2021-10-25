@@ -1,7 +1,13 @@
-<h1>Pipeline inputs</h1>
+<link rel="stylesheet" href="/path/to/styles/default.css">
+<script src="/path/to/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 
-<ul>
-{% for field_name, info in pipeline_status.pipeline_inputs.values.items() %}
-  <li>{{ field_name }}: <i>{{ info.value_schema.type }}</i></li>
-{%  endfor %}
-</ul>
+<h1>Pipeline step: {{ step_id }}</h1>
+
+{% set step=pipeline.get_step(step_id) %}
+{% set module_metadata=kiara.get_module_class(step.module_type).get_type_metadata() %}
+
+{{  module_metadata.documentation.full_doc }}
+
+<h2>Module source code</h2>
+<pre><code class="language-python">{{ module_metadata.process_src }}</code></pre>

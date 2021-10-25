@@ -2,6 +2,7 @@
 import re
 import typing
 import logging
+from concurrent.futures import ThreadPoolExecutor
 
 from pandas import Series
 
@@ -366,7 +367,10 @@ class PreprocessModule(KiaraModule):
 
 
 class LDAModule(KiaraModule):
-    """Perform Latent Dirichlet Allocation on a tokenized corpus."""
+    """Perform Latent Dirichlet Allocation on a tokenized corpus.
+
+    This module computes models for a range of number of topics provided by the user.
+    """
 
     _module_type_name = "LDA"
 
@@ -377,16 +381,26 @@ class LDAModule(KiaraModule):
     ]:
         inputs: typing.Dict[str, typing.Dict[str, typing.Any]] = {
             "tokens_array": {"type": "array", "doc": "The text corpus."},
-            "num_topics": {
+            "num_topics_min": {
                 "type": "integer",
-                "doc": "The number of topics.",
+                "doc": "The minimal number of topics.",
                 "default": 7,
+            },
+            "num_topics_max": {
+                "type": "integer",
+                "doc": "The max number of topics.",
+                "optional": True
             },
             "compute_coherence": {
                 "type": "boolean",
-                "doc": "Whether to train the model without coherence calculation.",
-                "default": False,
+                "doc": "Whether to compute the coherence score for each model.",
+                "default": False
             },
+            "words_per_topic": {
+                "type": "integer",
+                "doc": "How many words per topic to put in the result model.",
+                "default": 10
+            }
         }
         return inputs
 
@@ -397,56 +411,51 @@ class LDAModule(KiaraModule):
     ]:
 
         outputs = {
-            "topic_model": {
+            "topic_models": {
+                "type": "dict",
+                "doc": "TBD"
+            },
+            "coherence_table": {
                 "type": "table",
-                "doc": "A table with 'topic_id' and 'words' columns (also 'num_topics', if coherence calculation was switched on).",
+                "doc": "TBD",
+                "optional": True
             }
         }
         return outputs
 
-    def compute_with_coherence(self, corpus, id2word, corpus_model):
-
+    def create_model(self, corpus, num_topics: int, id2word: typing.Mapping[str, int]):
         from gensim.models import LdaModel
-        import pandas as pd
+
+        model = LdaModel(
+            corpus, id2word=id2word, num_topics=num_topics, eval_every=None
+        )
+        return model
+
+    def compute_coherence(self, model, corpus_model, id2word: typing.Mapping[str, int]):
+
         from gensim.models import CoherenceModel
-        from pyarrow import Table
 
-        topics_nr = []
-        coherence_values_gensim = []
-        models = []
-        models_idx = [x for x in range(3, 20)]
-        for num_topics in range(3, 20):
-            # fastest processing time preset (hypothetically less accurate)
-            # model = gensim.models.ldamulticore.LdaMulticore(
-            #     corpus, id2word=id2word, num_topics=num_topics, eval_every=None
-            # )
+        coherencemodel = CoherenceModel(
+            model=model, texts=corpus_model, dictionary=id2word, coherence="c_v"
+        )
+        coherence_value = coherencemodel.get_coherence()
+        return coherence_value
 
-            model = LdaModel(
-                corpus, id2word=id2word, num_topics=num_topics, eval_every=None
-            )
-            # slower processing time preset (hypothetically more accurate) approx 20min for 700 short docs
-            # model = gensim.models.ldamulticore.LdaMulticore(corpus, id2word=id2word, num_topics=num_topics, chunksize=1000, iterations = 200, passes = 10, eval_every = None)
-            # slowest processing time preset approx 35min for 700 short docs (hypothetically even more accurate)
-            # model = gensim.models.ldamulticore.LdaMulticore(corpus, id2word=id2word, num_topics=num_topics, chunksize=2000, iterations = 400, passes = 20, eval_every = None)
-            models.append(model)
-            coherencemodel = CoherenceModel(
-                model=model, texts=corpus_model, dictionary=id2word, coherence="c_v"
-            )
-            coherence_value = coherencemodel.get_coherence()
-            coherence_values_gensim.append(coherence_value)
-            topics_nr.append(str(num_topics))
+    def assemble_coherence(self, coherence_dict: typing.Mapping[int, float], models_dict: typing.Mapping[int, typing.Any], words_per_topic: int):
 
-        df_coherence = pd.DataFrame(topics_nr, columns=["Number of topics"])
-        df_coherence["Coherence"] = coherence_values_gensim
+        import pandas as pd
+        import pyarrow as pa
+
+        df_coherence = pd.DataFrame(coherence_dict.keys(), columns=["Number of topics"])
+        df_coherence["Coherence"] = coherence_dict.values()
 
         # Create list with topics and topic words for each number of topics
         num_topics_list = []
         topics_list = []
-        for i in range(len(models_idx)):
-            numtopics = models_idx[i]
-            num_topics_list.append(numtopics)
-            model = models[i]
-            topic_print = model.print_topics(num_words=30)
+        for num_topics, model, in models_dict.items():
+
+            num_topics_list.append(num_topics)
+            topic_print = model.print_topics(num_words=words_per_topic)
             topics_list.append(topic_print)
 
         df_coherence_table = pd.DataFrame(columns=["topic_id", "words", "num_topics"])
@@ -462,7 +471,8 @@ class LDAModule(KiaraModule):
                 df_coherence_table["num_topics"].loc[idx] = num_topics_list[i]
                 idx += 1
 
-        return Table.from_pandas(df_coherence_table, preserve_index=False)
+        coherence_table = pa.Table.from_pandas(df_coherence_table, preserve_index=False)
+        return coherence_table
 
     def process(self, inputs: ValueSet, outputs: ValueSet) -> None:
 
@@ -474,7 +484,13 @@ class LDAModule(KiaraModule):
         logging.getLogger("gensim").setLevel(logging.ERROR)
         tokens_array = inputs.get_value_data("tokens_array")
         tokens = tokens_array.to_pylist()
-        num_topics = inputs.get_value_data("num_topics")
+
+        words_per_topic = inputs.get_value_data("words_per_topic")
+
+        num_topics_min = inputs.get_value_data("num_topics_min")
+        num_topics_max = inputs.get_value_data("num_topics_max")
+        if num_topics_max is None:
+            num_topics_max= num_topics_min
 
         compute_coherence = inputs.get_value_data("compute_coherence")
         id2word = corpora.Dictionary(tokens)
@@ -483,21 +499,53 @@ class LDAModule(KiaraModule):
         # model = gensim.models.ldamulticore.LdaMulticore(
         #     corpus, id2word=id2word, num_topics=num_topics, eval_every=None
         # )
-        model = LdaModel(
-            corpus, id2word=id2word, num_topics=num_topics, eval_every=None
-        )
-        topic_print_model = model.print_topics(num_words=30)
 
-        if not compute_coherence:
+        models = {}
+        model_tables = {}
+        coherence = {}
+
+        # multi_threaded = False
+        # if not multi_threaded:
+
+        for nt in range(num_topics_min, num_topics_max+1):
+            model = self.create_model(corpus=corpus, num_topics=nt, id2word=id2word)
+            models[nt] = model
+            topic_print_model = model.print_topics(num_words=words_per_topic)
             df = pd.DataFrame(topic_print_model, columns=["topic_id", "words"])
             # TODO: create table directly
-            result = Table.from_pandas(df)
-        else:
-            result = self.compute_with_coherence(
-                corpus=corpus, id2word=id2word, corpus_model=tokens
-            )
+            result_table = Table.from_pandas(df)
+            model_tables[nt] = result_table
+            if compute_coherence:
+                coherence_result = self.compute_coherence(model=model, corpus_model=tokens, id2word=id2word)
+                coherence[nt] = coherence_result
 
-        outputs.set_value("topic_model", result)
+        # else:
+        #     def create_model(num_topics):
+        #         model = self.create_model(corpus=corpus, num_topics=num_topics, id2word=id2word)
+        #         topic_print_model = model.print_topics(num_words=30)
+        #         df = pd.DataFrame(topic_print_model, columns=["topic_id", "words"])
+        #         # TODO: create table directly
+        #         result_table = Table.from_pandas(df)
+        #         coherence_result = None
+        #         if compute_coherence:
+        #             coherence_result = self.compute_coherence(model=model, corpus_model=tokens, id2word=id2word)
+        #         return (num_topics, model, result_table, coherence_result)
+        #
+        #     executor = ThreadPoolExecutor()
+        #     results: typing.Any = executor.map(create_model, range(num_topics_min, num_topics_max+1))
+        #     executor.shutdown(wait=True)
+        #     for r in results:
+        #         models[r[0]] = r[1]
+        #         model_tables[r[0]] = r[2]
+        #         if compute_coherence:
+        #             coherence[r[0]] = r[3]
+
+        if compute_coherence:
+            coherence_table = self.assemble_coherence(coherence_dict=coherence, models_dict=models, words_per_topic=words_per_topic)
+        else:
+            coherence_table = None
+
+        outputs.set_values(topic_models=model_tables, coherence_table=coherence_table)
 
 
 def install_and_import_spacy_package(package):

@@ -30,7 +30,7 @@ class AugmentCorpusMetadataPage(PipelinePage):
 
         selected_table: Value = st.kiara.value_input_table(label="Select table", add_no_value_option=True, onboard_options={"enabled": True, "source_default": "folder"}, key=self.get_page_key("selected_table"))
 
-        preview_table = st.checkbox("Preview table")
+        preview_table = st.checkbox("Preview table (first 50 rows)")
         if selected_table and selected_table.item_is_valid():
             if preview_table:
                 st.dataframe(selected_table.get_value_data().to_pandas().head(50))
@@ -67,9 +67,8 @@ class AugmentCorpusMetadataPage(PipelinePage):
 
             table = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
             if table.item_is_valid():
-                st.write("Result preview")
+                st.write("### Result preview (first 50 rows)")
                 AgGrid(table.get_value_data().to_pandas().head(50))
-
 
 class TimestampedCorpusPage(PipelinePage):
 
@@ -78,6 +77,9 @@ class TimestampedCorpusPage(PipelinePage):
         # this is basically unchanged from the other prototype, since it doesn't involve any processing on the actual workflow
 
         augmented_table_value = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
+
+
+        #st.write(self.pipeline.get_current_state().dict())
 
         if not augmented_table_value.item_is_valid():
 
@@ -103,14 +105,6 @@ class TimestampedCorpusPage(PipelinePage):
             query = sql_query_month
         else:
             query = sql_query_year
-
-        # CHANGED
-        # again, it's not really necessary anymore to create a workflow for just executing a single module
-        # query_workflow = kiara.create_workflow("table.query.sql")
-        # query_workflow.inputs.set_values(table=augmented_table_value, query=query)
-        #
-        # query_result_value = query_workflow.outputs.get_value_obj("query_result")
-        # query_result_table = query_result_value.get_value_data()
 
         query_module = st.kiara.get_operation("table.query.sql")
         query_result = query_module.module.run(table=augmented_table_value, query=query)
@@ -157,7 +151,7 @@ class TimestampedCorpusPage(PipelinePage):
 
         if display_choice == "data":
 
-            AgGrid(query_result_table.to_pandas())
+            st.table(query_result_table.to_pandas())
 
         else:
 
@@ -196,12 +190,8 @@ class TimestampedCorpusPage(PipelinePage):
                 query_result_table2 = query_result_value2.get_value_data()
 
                 df2 = query_result_table2.to_pandas()
-                gb = GridOptionsBuilder.from_dataframe(df2)
 
-                gb.configure_column("content", maxWidth=800, tooltipField="content")
-
-                AgGrid(df2.head(100), gridOptions=gb.build())
-
+                st.dataframe(df2.head(100))
 
 class TokenizationPage(PipelinePage):
 
@@ -232,8 +222,8 @@ class TokenizationPage(PipelinePage):
         if tokenized_table_value.item_is_valid():
             # if the output exists, we write it as a pandas Series (since streamlit supports that natively)
             df = tokenized_table_value.get_value_data().to_pandas()
-            st.write("Result preview")
-            st.dataframe(df.head(50))
+            st.write("### Result preview (first 50 rows)")
+            st.table(df.head(50))
         else:
             st.write("No result")
 
@@ -300,9 +290,9 @@ class TextPreprocessingPage(PipelinePage):
                 "remove_stopwords": stopword_list
             }
             preview = preview_op.run(token_lists=sample_token_array, **inputs)
-        preview_pre_processing = stopword_left.checkbox("Preview with current inputs", value=True)
+        preview_pre_processing = stopword_left.checkbox("Preview randomly sampled data (using current inputs)", value=True)
         if preview_pre_processing and preview:
-            stopword_left.dataframe(preview.get_value_data("preprocessed_token_lists").to_pandas())
+            stopword_left.table(preview.get_value_data("preprocessed_token_lists").to_pandas())
         elif preview_pre_processing:
             stopword_left.write("No data (yet).")
 
@@ -335,28 +325,28 @@ class TextPreprocessingPage(PipelinePage):
         if preprocessed_table_value.item_is_valid():
             # if the output exists, we write it as a pandas Series (since streamlit supports that natively)
             df = preprocessed_table_value.get_value_data().to_pandas()
-            st.write("Result preview")
-            st.dataframe(df.head(50))
+            st.write("### Result preview (first 50 rows)")
+            st.table(df.head(50))
         else:
             st.write("No result")
 
-class LemmatizeTextPage(PipelinePage):
-
-    def run_page(self, st: DeltaGenerator):
-
-        st.write("Here Lorella would write some explanation about what is happening, and why.")
-
-        button = st.button("Lemmatize")
-        if button:
-            with st.spinner("Lemmatizing tokens, this might take a while..."):
-                self.process_step("lemmatize")
-
-        lemmatized = self.get_step_outputs("lemmatize").get_value_obj(
-            "tokens_array"
-        )
-
-        if lemmatized.item_is_valid():
-            st.dataframe(lemmatized.get_value_data().to_pandas())
+# class LemmatizeTextPage(PipelinePage):
+#
+#     def run_page(self, st: DeltaGenerator):
+#
+#         st.write("Here Lorella would write some explanation about what is happening, and why.")
+#
+#         button = st.button("Lemmatize")
+#         if button:
+#             with st.spinner("Lemmatizing tokens, this might take a while..."):
+#                 self.process_step("lemmatize")
+#
+#         lemmatized = self.get_step_outputs("lemmatize").get_value_obj(
+#             "tokens_array"
+#         )
+#
+#         if lemmatized.item_is_valid():
+#             st.dataframe(lemmatized.get_value_data().to_pandas())
 
 class LDAPage(PipelinePage):
 
@@ -365,20 +355,47 @@ class LDAPage(PipelinePage):
         st.write("Here Lorella would write some explanation about what is happening, and why.")
 
         compute_coherence = st.checkbox("Compute coherence")
-        number_of_topics = st.slider("Number of topics", min_value=1, max_value=15)
+        if not compute_coherence:
+            number_of_topics_min = st.slider("Number of topics", min_value=1, max_value=40, value=7)
+            number_of_topics_max = number_of_topics_min
+        else:
+            number_of_topics_range = st.slider("Number of topics", 0, 40, (3, 25))
+            number_of_topics_min, number_of_topics_max = number_of_topics_range
 
         button = st.button("Generate LDA")
         if button:
-            self.pipeline.inputs.set_values(number_of_topics=number_of_topics, compute_coherence=compute_coherence)
+            self.pipeline.inputs.set_values(number_of_topics_min=number_of_topics_min, number_of_topics_max=number_of_topics_max, compute_coherence=compute_coherence)
             with st.spinner("Generating LDA, this might take a while..."):
                 self.process_step("generate_lda")
 
-        topic_model = self.get_step_outputs("generate_lda").get_value_obj(
-            "topic_model"
+        topic_models = self.get_step_outputs("generate_lda").get_value_obj(
+            "topic_models"
         )
+        coherence_table = self.get_step_outputs("generate_lda").get_value_obj("coherence_table")
 
-        if topic_model.item_is_valid():
-            st.dataframe(topic_model.get_value_data().to_pandas())
+        st.write("### Coherence table")
+        if compute_coherence:
+            if not coherence_table.is_none:
+                st.table(coherence_table.get_value_data().to_pandas())
+            else:
+                st.write("No coherence computed (yet).")
+
+        st.write("### Model details")
+        if not topic_models.item_is_valid():
+            st.write("No models available (yet).")
+        else:
+            all_topic_models = topic_models.get_value_data()
+            if not compute_coherence:
+                selected_model_idx = number_of_topics_min
+            else:
+                selected_model_idx = st.selectbox("Number of topics", options=range(number_of_topics_min, number_of_topics_max))
+
+            try:
+                selected_model_table = all_topic_models[selected_model_idx]
+                st.table(selected_model_table.to_pandas())
+            except KeyError:
+                st.write(f"No model for {selected_model_idx} number of topics.")
+
 
 def onboard_folder(kiara: Kiara, pipeline_folder: str, corpus_path: str, value_alias: str):
 
@@ -460,6 +477,6 @@ if not app.pages:
     app.add_page(TimestampedCorpusPage(id="Timestamped data"))
     app.add_page(TokenizationPage(id="Tokenization"))
     app.add_page(TextPreprocessingPage(id="Text pre-processing"))
-    app.add_page(LemmatizeTextPage(id="Lemmatize"))
+    # app.add_page(LemmatizeTextPage(id="Lemmatize"))
     app.add_page(LDAPage(id="LDA"))
 app.run()
