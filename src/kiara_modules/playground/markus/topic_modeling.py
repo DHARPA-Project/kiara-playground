@@ -413,12 +413,16 @@ class LDAModule(KiaraModule):
         outputs = {
             "topic_models": {
                 "type": "dict",
-                "doc": "TBD"
+                "doc": "A dictionary with one coherence model table for each number of topics."
             },
             "coherence_table": {
                 "type": "table",
-                "doc": "TBD",
+                "doc": "Coherence details.",
                 "optional": True
+            },
+            "coherence_map": {
+                "type": "dict",
+                "doc": "A map with the coherence value for every number of topics."
             }
         }
         return outputs
@@ -441,13 +445,10 @@ class LDAModule(KiaraModule):
         coherence_value = coherencemodel.get_coherence()
         return coherence_value
 
-    def assemble_coherence(self, coherence_dict: typing.Mapping[int, float], models_dict: typing.Mapping[int, typing.Any], words_per_topic: int):
+    def assemble_coherence(self, models_dict: typing.Mapping[int, typing.Any], words_per_topic: int):
 
         import pandas as pd
         import pyarrow as pa
-
-        df_coherence = pd.DataFrame(coherence_dict.keys(), columns=["Number of topics"])
-        df_coherence["Coherence"] = coherence_dict.values()
 
         # Create list with topics and topic words for each number of topics
         num_topics_list = []
@@ -540,12 +541,15 @@ class LDAModule(KiaraModule):
         #         if compute_coherence:
         #             coherence[r[0]] = r[3]
 
+        # df_coherence = pd.DataFrame(coherence.keys(), columns=["Number of topics"])
+        # df_coherence["Coherence"] = coherence.values()
+
         if compute_coherence:
-            coherence_table = self.assemble_coherence(coherence_dict=coherence, models_dict=models, words_per_topic=words_per_topic)
+            coherence_table = self.assemble_coherence(models_dict=models, words_per_topic=words_per_topic)
         else:
             coherence_table = None
 
-        outputs.set_values(topic_models=model_tables, coherence_table=coherence_table)
+        outputs.set_values(topic_models=model_tables, coherence_table=coherence_table, coherence_map=coherence)
 
 
 def install_and_import_spacy_package(package):
