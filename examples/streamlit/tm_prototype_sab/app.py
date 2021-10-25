@@ -374,7 +374,9 @@ class LDAPage(PipelinePage):
         coherence_table = self.get_step_outputs("generate_lda").get_value_obj("coherence_table")
 
         st.write("### Coherence table")
-        if compute_coherence:
+        if not compute_coherence:
+            st.write("Coherence not considered.")
+        else:
             if not coherence_table.is_none:
                 st.table(coherence_table.get_value_data().to_pandas())
             else:
