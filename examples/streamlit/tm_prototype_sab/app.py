@@ -256,20 +256,18 @@ class TextPreprocessingPage(PipelinePage):
 
         st.write("#### 4. Remove stopwords")
         all_stopword_languages = get_stopwords().fileids()
-        stopword_left, stopword_right = st.columns([8,2])
-        languages = stopword_left.multiselect("Include stopwords for languages...", options=sorted(all_stopword_languages), help="This downloads stopword lists included in the nltk package.")
+        languages = st.multiselect("Include stopwords for languages...", options=sorted(all_stopword_languages), help="This downloads stopword lists included in the nltk package.")
         if languages:
             stopwords_op = st.kiara.get_operation("playground.markus.topic_modeling.assemble_stopwords")
             stopword_result = stopwords_op.run(languages=languages)
             stopword_list = stopword_result.get_value_data("stopwords")
         else:
             stopword_list = []
-        show_stopwords = stopword_right.checkbox("Show current stopwords")
-        if show_stopwords:
-            if stopword_list:
-                stopword_right.dataframe(stopword_list)
-            else:
-                stopword_right.write("*No stopwords (yet).*")
+        stopword_expander = st.expander("Current stopwords")
+        if stopword_list:
+            stopword_expander.dataframe(stopword_list)
+        else:
+            stopword_expander.write("*No stopwords (yet).*")
 
         tokens = self.get_step_outputs("tokenization")["tokens_array"]
 
@@ -290,11 +288,11 @@ class TextPreprocessingPage(PipelinePage):
                 "remove_stopwords": stopword_list
             }
             preview = preview_op.run(token_lists=sample_token_array, **inputs)
-        preview_pre_processing = stopword_left.checkbox("Preview randomly sampled data (using current inputs)", value=True)
+        preview_pre_processing = st.checkbox("Preview randomly sampled data (using current inputs)", value=True)
         if preview_pre_processing and preview:
-            stopword_left.table(preview.get_value_data("preprocessed_token_lists").to_pandas())
+            st.table(preview.get_value_data("preprocessed_token_lists").to_pandas())
         elif preview_pre_processing:
-            stopword_left.write("No data (yet).")
+            st.write("No data (yet).")
 
         confirmation = st.button("Proceed")
 
