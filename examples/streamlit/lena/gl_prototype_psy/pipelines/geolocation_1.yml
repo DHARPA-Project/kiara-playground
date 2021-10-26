@@ -1,0 +1,22 @@
+module_type_name: geolocation 
+steps:
+  - module_type: file.import_from.local.file_path
+    step_id: onboard_csv
+  - module_type: file.convert_to.table
+    module_config:
+      source_type: "file"
+      target_type: "table"
+      ignore_errors: true
+    step_id: csv_to_table
+    input_links:
+      value_item: onboard_csv.value_item
+  - module_type: table.query.sql
+    module_config:
+      query: "SELECT * FROM data WHERE latitude IS NOT NULL or longitude IS NOT NULL"
+    step_id: query_not_null
+    input_links:
+      table: csv_to_table.value_item
+      
+
+  
+
