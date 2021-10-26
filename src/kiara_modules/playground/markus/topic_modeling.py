@@ -440,7 +440,7 @@ class LDAModule(KiaraModule):
         from gensim.models import CoherenceModel
 
         coherencemodel = CoherenceModel(
-            model=model, texts=corpus_model, dictionary=id2word, coherence="c_v"
+            model=model, texts=corpus_model, dictionary=id2word, coherence="c_v",processes=1
         )
         coherence_value = coherencemodel.get_coherence()
         return coherence_value
