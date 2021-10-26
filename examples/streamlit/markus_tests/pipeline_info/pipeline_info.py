@@ -20,7 +20,7 @@ loader = FileSystemLoader(templates_path)
 env: Environment = Environment(loader=loader)
 
 template = env.get_template("status.j2")
-rendered = template.render(pipeline_status=pipeline.get_current_state())
+rendered = template.render(kiara=st.kiara, pipeline=pipeline, step_id="text_pre_processing")
 
 import streamlit.components.v1 as components
 components.html(rendered, height=500)

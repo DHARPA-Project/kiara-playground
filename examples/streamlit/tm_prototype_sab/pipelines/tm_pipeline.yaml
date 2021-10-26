@@ -13,14 +13,10 @@ steps:
     step_id: text_pre_processing
     input_links:
       token_lists: tokenization.tokens_array
-  - module_type:  playground.markus.topic_modeling.lemmatize_tokens_array
-    step_id: lemmatize
-    input_links:
-      tokens_array: text_pre_processing.preprocessed_token_lists
   - module_type: playground.markus.topic_modeling.LDA
     step_id: generate_lda
     input_links:
-      tokens_array: lemmatize.tokens_array
+      tokens_array: text_pre_processing.preprocessed_token_lists
 input_aliases:
   augment_corpus_data__table: corpus_table
   tokenization__tokenize_by_word: tokenize_by_word
@@ -32,9 +28,12 @@ input_aliases:
   text_pre_processing__remove_all_numeric: remove_all_numeric
   text_pre_processing__remove_stopwords: remove_stopwords
   generate_lda__compute_coherence: compute_coherence
-  generate_lda__num_topics: number_of_topics
+  generate_lda__num_topics_min: number_of_topics_min
+  generate_lda__num_topics_max: number_of_topics_max
+  generate_lda__words_per_topic: words_per_topic
 output_aliases:
-  generate_lda__topic_model: topic_model
+  generate_lda__topic_models: topic_models
+  generate_lda__coherence_table: coherence_table
 #  lemmatize__tokens_array: lemmatized_array
 #  augment_corpus_data__table: corpus_table
 #  text_pre_processing__preprocessed_token_lists: preprocessed_token_lists
