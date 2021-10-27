@@ -31,7 +31,7 @@ class AugmentCorpusMetadataPage(PipelinePage):
         st.caption('A qualified table is a table prepared for Kiara')
         selected_table: Value = st.kiara.value_input_table(label="Select table", add_no_value_option=True, onboard_options={"enabled": True, "source_default": "folder"}, key=self.get_page_key("selected_table"))
                 
-        preview_table = st.checkbox("Preview table (first 50 rows)")
+        preview_table = st.checkbox("Preview table")
         if selected_table and selected_table.item_is_valid():
             if preview_table:
                 st.dataframe(selected_table.get_value_data().to_pandas().head(50))
@@ -56,14 +56,17 @@ class AugmentCorpusMetadataPage(PipelinePage):
                 with st.spinner("Extracting metadata from file names..."):
                     augment_corpus_result = self.process_step("augment_corpus_data")
 
+
                 if augment_corpus_result != "Success":
                     st.error(augment_corpus_result)
                     return
 
             table = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
+            
             if table.item_is_valid():
-                st.write("### Preview your results")
-                AgGrid(table.get_value_data().to_pandas().head(50))
+                preview_table = st.checkbox("Preview result")
+                if preview_table:
+                   st.dataframe(table.get_value_data().to_pandas().head(50))
 
 class TimestampedCorpusPage(PipelinePage):
 
@@ -150,9 +153,6 @@ class TimestampedCorpusPage(PipelinePage):
 
         else:
 
-            #if timeInfo is None:
-                #st.markdown("Hover over the above chart and click on the displayed date to obtain a preview of the content in the table below")
-
             if timeInfo is not None:
 
                 sql_query_day2 = f"SELECT pub_name, date, content FROM data WHERE DATE_PART('year', date) = {timeInfo[0]} AND DATE_PART('month', date) = {timeInfo[1]} and DATE_PART('day', date) = {timeInfo[2]}"
@@ -166,18 +166,6 @@ class TimestampedCorpusPage(PipelinePage):
                 else:
                     query2 = sql_query_year2
 
-                # CHANGED
-                # same as above, replacing workflow with operation/module
-                # query_workflow2 = kiara.create_workflow("table.query.sql")
-                # query_workflow2.inputs.set_values(
-                #     table=augmented_table_value, query=query2
-                # )
-                # query_result_value2 = query_workflow2.outputs.get_value_obj(
-                #     "query_result"
-                # )
-                # query_result_table2 = query_result_value2.get_value_data()
-
-                # we can re-use the 'query_module' object from above
                 query_result2 = query_module.module.run(
                     table=augmented_table_value, query=query2
                 )
