@@ -16,10 +16,13 @@ from kiara_modules.language_processing.tokens import get_stopwords
 from kiara_streamlit.pipelines import PipelineApp
 from kiara_streamlit.pipelines.pages import PipelinePage
 
+from kiara.processing import JobStatus
+
 st.set_page_config(page_title="Kiara-streamlit auto-rendered pipeline", layout="wide")
 
 pipelines_folder = os.path.join(os.path.dirname(__file__), "pipelines")
 kiara_streamlit.init(kiara_config={"extra_pipeline_folders": [pipelines_folder]})
+
 
 
 # =======================================================================================
@@ -179,6 +182,9 @@ class TimestampedCorpusPage(PipelinePage):
 class TokenizationPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
+        
+        #expander = st.expander("Module info")
+        #st.kiara.write_module_info_page(module="playground.mariella.language.tokenize", container=expander)
 
         st.write(
             "For latin-based languages, the default tokenization option is by word"
@@ -468,7 +474,7 @@ onboarded = onboard_files(_kiara=st.kiara)
 main_pipeline = os.path.join(pipelines_folder, "tm_pipeline.yaml")
 
 app = PipelineApp.create(
-    pipeline=main_pipeline, config={"show_pipeline_status": True, "show_prev_and_next_buttons": True}
+    pipeline=main_pipeline, config={"show_pipeline_status": False, "show_prev_and_next_buttons": True}
 )
 
 if not app.pages:
@@ -479,3 +485,43 @@ if not app.pages:
     # app.add_page(LemmatizeTextPage(id="Lemmatize"))
     app.add_page(LDAPage(id="Prepare your topic model"))
 app.run()
+
+def pipeline_status(
+        pipeline, container: DeltaGenerator = st
+    ) -> None:
+
+        md = "### **Inputs**\n"
+        for stage, fields in pipeline.get_pipeline_inputs_by_stage().items():
+            md = f"{md}\n"
+            for field in fields:
+                value = pipeline.inputs[field]
+                md = f"{md}* **{field}**: *{value.item_status()}*\n"
+
+        md = f"\n{md}### **Steps**\n"
+        for stage, steps in pipeline.get_steps_by_stage().items():
+            md = f"{md}\n"
+            for step_id in steps.keys():
+                job_details = pipeline._controller.get_job_details(step_id)
+                if job_details is None:
+                    status = "not run yet"
+                elif job_details.status == JobStatus.FAILED:
+                    status = "failed"
+                else:
+                    status = "finished"
+
+                md = f"{md}* **{step_id}**: *{status}*\n"
+
+        md = f"\n{md}### **Outputs**\n"
+        for stage, fields in pipeline.get_pipeline_outputs_by_stage().items():
+            md = f"{md}\n"
+            for field in fields:
+                value = pipeline.outputs[field]
+                status = "ready" if value.is_set else "not ready"
+                md = f"{md}* **{field}**: *{status}*\n"
+
+        container.markdown(md)
+
+expander_moduleinfo = st.sidebar.expander(label="Workflow status")
+
+with expander_moduleinfo:
+    pipeline_status(pipeline=app.pipeline)
