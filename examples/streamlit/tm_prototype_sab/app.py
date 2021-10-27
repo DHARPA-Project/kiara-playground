@@ -182,9 +182,12 @@ class TimestampedCorpusPage(PipelinePage):
 class TokenizationPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
+
+        step = self.pipeline.get_step("tokenization")
+        module = step.module
         
-        #expander = st.expander("Module info")
-        #st.kiara.write_module_info_page(module="playground.mariella.language.tokenize", container=expander)
+        expander = st.expander("Module info")
+        st.kiara.write_module_info_page(module=module, container=expander)
 
         st.write(
             "For latin-based languages, the default tokenization option is by word"
