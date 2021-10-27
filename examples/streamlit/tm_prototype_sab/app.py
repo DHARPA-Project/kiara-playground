@@ -64,7 +64,7 @@ class AugmentCorpusMetadataPage(PipelinePage):
             table = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
             
             if table.item_is_valid():
-                preview_table = st.checkbox("Preview result")
+                preview_table = st.checkbox("Preview results")
                 if preview_table:
                    st.dataframe(table.get_value_data().to_pandas().head(50))
 
@@ -187,7 +187,7 @@ class TokenizationPage(PipelinePage):
             "Tokenization is necessary to proceed further. It may take several minutes depending on your corpus size"
         )
         tokenize = st.selectbox("Tokenize by", ("word", "character"), key="0")
-        token_button = st.button("GO")
+        token_button = st.button("Confirm")
 
         if token_button:
 
@@ -203,10 +203,10 @@ class TokenizationPage(PipelinePage):
         tokenized_table_value = self.get_step_outputs("tokenization").get_value_obj("tokens_array")
 
         if tokenized_table_value.item_is_valid():
-            # if the output exists, we write it as a pandas Series (since streamlit supports that natively)
-            df = tokenized_table_value.get_value_data().to_pandas()
-            st.write("### Preview your results")
-            st.table(df.head(50))
+            preview_table = st.checkbox("Preview results")
+            if preview_table:
+                df = tokenized_table_value.get_value_data().to_pandas()
+                st.dataframe(df.head(50))
         else:
             st.write("No result")
 
@@ -216,15 +216,15 @@ class TextPreprocessingPage(PipelinePage):
     def run_page(self, st: DeltaGenerator):
 
         left, center, right = st.columns([2, 4, 2])
-        left.write("#### 1. Lowercase")
+        left.write("##### 1. Lowercase")
         lowercase = left.checkbox("Convert to lowercase")
         # isalnum,isalph,isdigit
-        center.write("#### 2. Numbers and punctuation")
+        center.write("##### 2. Numbers and punctuation")
         remove_alphanumeric = center.checkbox("Remove all words that contain numbers (e.g. ex1ample)")
         remove_non_alpha = center.checkbox("Remove all words that contain punctuation and numbers (e.g. ex1a.mple)")
         remove_all_numeric = center.checkbox("Remove numbers only (e.g. 876)")
 
-        right.write("#### 3. Words length")
+        right.write("##### 3. Words length")
         display_shorttokens = [0, 1, 2, 3, 4, 5]
         def _temp(token_len):
             if token_len == 0:
@@ -237,7 +237,7 @@ class TextPreprocessingPage(PipelinePage):
             format_func=lambda x: _temp(x),
         )
 
-        st.write("#### 4. Remove stopwords")
+        st.write("##### 4. Remove stopwords")
         all_stopword_languages = get_stopwords().fileids()
         languages = st.multiselect("Select the preferred language(s) for the stopword list(s) (NLTK)", options=sorted(all_stopword_languages))
         if languages:
@@ -271,13 +271,13 @@ class TextPreprocessingPage(PipelinePage):
                 "remove_stopwords": stopword_list
             }
             preview = preview_op.run(token_lists=sample_token_array, **inputs)
-        preview_pre_processing = st.checkbox("Preview a sample of your results", value=True)
+        preview_pre_processing = st.checkbox("Test settings on a sample", value=True)
         if preview_pre_processing and preview:
-            st.table(preview.get_value_data("preprocessed_token_lists").to_pandas())
+            st.dataframe(preview.get_value_data("preprocessed_token_lists").to_pandas())
         elif preview_pre_processing:
             st.write("No data (yet).")
 
-        confirmation = st.button("GO")
+        confirmation = st.button("Confirm")
 
         if confirmation:
 
@@ -306,8 +306,9 @@ class TextPreprocessingPage(PipelinePage):
         if preprocessed_table_value.item_is_valid():
             # if the output exists, we write it as a pandas Series (since streamlit supports that natively)
             df = preprocessed_table_value.get_value_data().to_pandas()
-            st.write("### Preview your results")
-            st.table(df.head(50))
+            preview= st.checkbox("Preview results", value=True)
+            if preview:
+                st.dataframe(df.head(50))
         else:
             st.write("No result")
 
