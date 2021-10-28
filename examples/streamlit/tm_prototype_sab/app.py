@@ -370,28 +370,28 @@ class LDAPage(PipelinePage):
         coherence_table = self.get_step_outputs("generate_lda").get_value_obj("coherence_table")
         coherence_map = self.get_step_outputs("generate_lda").get_value_obj("coherence_map")
 
-        left, right = st.columns([7, 2])
-        left.write("### Coherence table")
-        if not compute_coherence:
-            left.write("Coherence not considered.")
-        else:
-            if not coherence_table.is_none:
-                left.table(coherence_table.get_value_data().to_pandas())
-            else:
-                left.write("No coherence computed (yet).")
+        #left, right = st.columns([7, 2])
+        #left.write("### Coherence table")
+        #if not compute_coherence:
+        #    left.write("Coherence not considered.")
+        #else:
+        #    if not coherence_table.is_none:
+        #        left.table(coherence_table.get_value_data().to_pandas())
+        #     else:
+        #        left.write("No coherence computed (yet).")
 
-        right.write("### Coherence map")
+        st.write("### Coherence map")
         if not compute_coherence:
-            right.write("Coherence not considered.")
+            st.write("Coherence not considered.")
         else:
             if not coherence_map.is_none:
                 c_map = coherence_map.get_value_data()
                 df_coherence = pd.DataFrame(c_map.keys(), columns=['Number of topics'])
                 df_coherence['Coherence'] = c_map.values()
 
-                right.table(df_coherence)
+                st.table(df_coherence)
             else:
-                right.write("No coherence computed (yet).")
+                st.write("No coherence computed (yet).")
 
         st.write("### Model details")
         if not topic_models.item_is_valid():
