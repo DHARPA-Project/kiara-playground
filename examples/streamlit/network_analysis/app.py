@@ -44,9 +44,9 @@ class GraphAssemblyPage(PipelinePage):
 
         left, right = st.columns([3,1])
         edges_table = st.kiara.value_input_table("Select the table containing the graph edges",
-                                                 add_no_value_option=True, container=left)
+                                                 add_no_value_option=True, onboard_options={"enabled": True}, key=self.get_page_key("onboard_edges_table"), container=left)
         nodes_table = st.kiara.value_input_table("Select the table containing node attributes",
-                                                 add_no_value_option=True, container=right)
+                                                 add_no_value_option=True, onboard_options={"enabled": True}, key=self.get_page_key("onboard_nodes_table"), container=right)
 
         edge_column_names = self.get_table_column_names(edges_table)
         nodes_column_names = self.get_table_column_names(nodes_table)

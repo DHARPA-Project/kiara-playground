@@ -8,7 +8,9 @@ from kiara_modules.core.metadata_schemas import KiaraFile
 from pandas import DataFrame
 from pyarrow import csv
 
-
+KIARA_METADATA = {
+    "authors": [{"name": "Markus Binsteiner", "email": "markus@frkl.io"}],
+ }
 class CreateGraphFromFileModule(KiaraModule):
     """Load table-like data from a *kiara* file object (not a path!)."""
 
@@ -28,13 +30,13 @@ class CreateGraphFromFileModule(KiaraModule):
             }
         }
 
-        if self.get_config_value("allow_column_filter"):
-
-            inputs["columns"] = {
-                "type": "array",
-                "doc": "If provided, only import the columns that match items in this list.",
-                "optional": False,
-            }
+        # if self.get_config_value("allow_column_filter"):
+        #
+        #     inputs["columns"] = {
+        #         "type": "array",
+        #         "doc": "If provided, only import the columns that match items in this list.",
+        #         "optional": False,
+        #     }
 
         return inputs
 
@@ -50,11 +52,11 @@ class CreateGraphFromFileModule(KiaraModule):
         input_file: KiaraFile = inputs.get_value_data("file")
         imported_data = csv.read_csv(input_file.path)
 
-        if self.get_config_value("allow_column_filter"):
-            if self.get_config_value("columns"):
-                imported_data = imported_data.select(
-                    self.get_config_value("only_columns")
-                )
+        # if self.get_config_value("allow_column_filter"):
+        #     if self.get_config_value("columns"):
+        #         imported_data = imported_data.select(
+        #             self.get_config_value("only_columns")
+        #         )
 
         outputs.set_value("table", imported_data)
 

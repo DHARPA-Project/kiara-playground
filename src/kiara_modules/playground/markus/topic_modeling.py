@@ -12,76 +12,79 @@ from kiara.data.values import ValueSchema
 from kiara.exceptions import KiaraProcessingException
 from kiara_modules.language_processing.tokens import get_stopwords
 
+KIARA_METADATA = {
+    "tags": ["language_processing"],
+}
 
-class TokenizeModuleMarkus(KiaraModule):
-    def create_input_schema(
-        self,
-    ) -> typing.Mapping[
-        str, typing.Union[ValueSchema, typing.Mapping[str, typing.Any]]
-    ]:
-
-        return {
-            "table": {
-                "type": "table",
-                "doc": "The table that contains the column to tokenize.",
-            },
-            "column_name": {
-                "type": "string",
-                "doc": "The name of the column that contains the content to tokenize.",
-                "default": "content",
-            },
-            "tokenize_by_word": {
-                "type": "boolean",
-                "doc": "Whether to tokenize by word (default), or character.",
-                "default": True,
-            },
-        }
-
-    def create_output_schema(
-        self,
-    ) -> typing.Mapping[
-        str, typing.Union[ValueSchema, typing.Mapping[str, typing.Any]]
-    ]:
-
-        return {
-            "tokens_array": {
-                "type": "array",
-                "doc": "The tokenized content, as an array of lists of strings.",
-            }
-        }
-
-    def process(self, inputs: ValueSet, outputs: ValueSet):
-
-        import pyarrow as pa
-
-        table: pa.Table = inputs.get_value_data("table")
-        column_name: str = inputs.get_value_data("column_name")
-        tokenize_by_word: bool = inputs.get_value_data("tokenize_by_word")
-
-        if column_name not in table.column_names:
-            raise KiaraProcessingException(
-                f"Can't tokenize table: input table does not have a column named '{column_name}'."
-            )
-
-
-        import nltk
-        import vaex
-        import warnings
-        import numpy as np
-        warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
-
-        df = vaex.from_arrow_table(table)
-
-        def word_tokenize(word):
-            result = nltk.word_tokenize(word)
-            return result
-
-        tokenized = df.apply(word_tokenize, arguments=[df[column_name]])
-        result_array = tokenized.to_arrow(convert_to_native=True)
-
-        # result_array = pa.Array.from_pandas(tokenized)
-
-        outputs.set_values(tokens_array=result_array)
+# class TokenizeModuleMarkus(KiaraModule):
+#     def create_input_schema(
+#         self,
+#     ) -> typing.Mapping[
+#         str, typing.Union[ValueSchema, typing.Mapping[str, typing.Any]]
+#     ]:
+#
+#         return {
+#             "table": {
+#                 "type": "table",
+#                 "doc": "The table that contains the column to tokenize.",
+#             },
+#             "column_name": {
+#                 "type": "string",
+#                 "doc": "The name of the column that contains the content to tokenize.",
+#                 "default": "content",
+#             },
+#             "tokenize_by_word": {
+#                 "type": "boolean",
+#                 "doc": "Whether to tokenize by word (default), or character.",
+#                 "default": True,
+#             },
+#         }
+#
+#     def create_output_schema(
+#         self,
+#     ) -> typing.Mapping[
+#         str, typing.Union[ValueSchema, typing.Mapping[str, typing.Any]]
+#     ]:
+#
+#         return {
+#             "tokens_array": {
+#                 "type": "array",
+#                 "doc": "The tokenized content, as an array of lists of strings.",
+#             }
+#         }
+#
+#     def process(self, inputs: ValueSet, outputs: ValueSet):
+#
+#         import pyarrow as pa
+#
+#         table: pa.Table = inputs.get_value_data("table")
+#         column_name: str = inputs.get_value_data("column_name")
+#         tokenize_by_word: bool = inputs.get_value_data("tokenize_by_word")
+#
+#         if column_name not in table.column_names:
+#             raise KiaraProcessingException(
+#                 f"Can't tokenize table: input table does not have a column named '{column_name}'."
+#             )
+#
+#
+#         import nltk
+#         import vaex
+#         import warnings
+#         import numpy as np
+#         warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
+#
+#         df = vaex.from_arrow_table(table)
+#
+#         def word_tokenize(word):
+#             result = nltk.word_tokenize(word)
+#             return result
+#
+#         tokenized = df.apply(word_tokenize, arguments=[df[column_name]])
+#         result_array = tokenized.to_arrow(convert_to_native=True)
+#
+#         # result_array = pa.Array.from_pandas(tokenized)
+#
+#         outputs.set_values(tokens_array=result_array)
 
 
 class ExtractDateAndPubRefModule(KiaraModule):

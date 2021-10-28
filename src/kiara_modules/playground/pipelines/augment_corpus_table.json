@@ -1,6 +1,6 @@
 {
   "module_type_name": "augment_corpus_table",
-  "documentation": "Create augmented corpus table.",
+  "documentation": "Create augmented corpus table.\nTakes a table that contains a colum with text file names, and extracts date and publication detail information for each of the file names. The extracted details will be merged with the columns of the original table to create a new table item.",
   "steps": [
     {
       "module_type": "table.cut_column",
