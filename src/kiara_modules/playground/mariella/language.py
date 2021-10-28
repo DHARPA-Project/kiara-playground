@@ -7,11 +7,18 @@ from kiara.data.values.value_set import ValueSet
 from kiara.exceptions import KiaraProcessingException
 from pandas import Series
 
+KIARA_METADATA = {
+    "tags": ["language_processing"],
+}
 
 class TokenizeModule(KiaraModule):
     """Split sentences into words or words into characters.
     In other words, this operation establishes the word boundaries (i.e., tokens) a very helpful way of finding patterns. It is also the typical step prior to stemming and lemmatization
     """
+
+    KIARA_METADATA = {
+    "tags": ["tokenize", "tokens"],
+    }
 
     def create_input_schema(
         self,

@@ -6,6 +6,9 @@ from kiara.data.values import ValueSchema
 from kiara.data.values.value_set import ValueSet
 from pandas import Series
 
+KIARA_METADATA = {
+    "tags": ["language_processing"],
+}
 
 class PreprocessModule(KiaraModule):
     def create_input_schema(
