@@ -16,10 +16,13 @@ from kiara_modules.language_processing.tokens import get_stopwords
 from kiara_streamlit.pipelines import PipelineApp
 from kiara_streamlit.pipelines.pages import PipelinePage
 
+from kiara.processing import JobStatus
+
 st.set_page_config(page_title="Kiara-streamlit auto-rendered pipeline", layout="wide")
 
 pipelines_folder = os.path.join(os.path.dirname(__file__), "pipelines")
 kiara_streamlit.init(kiara_config={"extra_pipeline_folders": [pipelines_folder]})
+
 
 
 # =======================================================================================
@@ -28,10 +31,10 @@ kiara_streamlit.init(kiara_config={"extra_pipeline_folders": [pipelines_folder]}
 class AugmentCorpusMetadataPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
-
+        st.caption('A qualified table is a table prepared for Kiara')
         selected_table: Value = st.kiara.value_input_table(label="Select table", add_no_value_option=True, onboard_options={"enabled": True, "source_default": "folder"}, key=self.get_page_key("selected_table"))
-
-        preview_table = st.checkbox("Preview table (first 50 rows)")
+                
+        preview_table = st.checkbox("Preview table")
         if selected_table and selected_table.item_is_valid():
             if preview_table:
                 st.dataframe(selected_table.get_value_data().to_pandas().head(50))
@@ -41,12 +44,6 @@ class AugmentCorpusMetadataPage(PipelinePage):
             return
 
         # TODO: here we could check whether we have the required columns ('file_name', specifically)
-
-        st.markdown(
-            "Wait for file preview to be displayed, before proceeding to the next step"
-        )
-        st.markdown("*Temporary screen for file names metadata step*")
-        st.markdown("*This module will be completed at a later stage *")
 
         process_metadata = st.radio("Do your file names contain metadata?", ("no", "yes"))
 
@@ -62,14 +59,17 @@ class AugmentCorpusMetadataPage(PipelinePage):
                 with st.spinner("Extracting metadata from file names..."):
                     augment_corpus_result = self.process_step("augment_corpus_data")
 
+
                 if augment_corpus_result != "Success":
                     st.error(augment_corpus_result)
                     return
 
             table = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
+            
             if table.item_is_valid():
-                st.write("### Result preview (first 50 rows)")
-                AgGrid(table.get_value_data().to_pandas().head(50))
+                preview_table = st.checkbox("Preview results")
+                if preview_table:
+                   st.dataframe(table.get_value_data().to_pandas().head(50))
 
 class TimestampedCorpusPage(PipelinePage):
 
@@ -137,10 +137,10 @@ class TimestampedCorpusPage(PipelinePage):
             st.session_state.preview_choice = "data"
 
         with col1:
-            data_preview = st.button(label="Aggregated data")
-
+            data_preview = st.button(label="Sources according to selection", help='Display your sources according to the parameters settings on the left panel')
+            
         with col2:
-            source_view = st.button(label="Sources list by time period")
+            source_view = st.button(label="Sources by time period", help="Hover over the above chart and click on the displayed date to obtain a preview of the content in the table below")
 
         if data_preview:
             st.session_state.preview_choice = "data"
@@ -156,9 +156,6 @@ class TimestampedCorpusPage(PipelinePage):
 
         else:
 
-            if timeInfo is None:
-                st.markdown("Hover over chart and click on date that appears on top")
-
             if timeInfo is not None:
 
                 sql_query_day2 = f"SELECT pub_name, date, content FROM data WHERE DATE_PART('year', date) = {timeInfo[0]} AND DATE_PART('month', date) = {timeInfo[1]} and DATE_PART('day', date) = {timeInfo[2]}"
@@ -172,18 +169,6 @@ class TimestampedCorpusPage(PipelinePage):
                 else:
                     query2 = sql_query_year2
 
-                # CHANGED
-                # same as above, replacing workflow with operation/module
-                # query_workflow2 = kiara.create_workflow("table.query.sql")
-                # query_workflow2.inputs.set_values(
-                #     table=augmented_table_value, query=query2
-                # )
-                # query_result_value2 = query_workflow2.outputs.get_value_obj(
-                #     "query_result"
-                # )
-                # query_result_table2 = query_result_value2.get_value_data()
-
-                # we can re-use the 'query_module' object from above
                 query_result2 = query_module.module.run(
                     table=augmented_table_value, query=query2
                 )
@@ -197,21 +182,24 @@ class TimestampedCorpusPage(PipelinePage):
 class TokenizationPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
+        
+        #expander = st.expander("Module info")
+        #st.kiara.write_module_info_page(module="playground.mariella.language.tokenize", container=expander)
 
         st.write(
-            "For languages based on latin characters, use default tokenization option (by word)."
+            "For latin-based languages, the default tokenization option is by word"
         )
         st.write(
-            "This first pre-processing step is necessary to proceed further. Depending on your corpus size, it could take several minutes"
+            "Tokenization is necessary to proceed further. It may take several minutes depending on your corpus size"
         )
         tokenize = st.selectbox("Tokenize by", ("word", "character"), key="0")
-        token_button = st.button("Proceed")
+        token_button = st.button("Confirm")
 
         if token_button:
 
             self.set_pipeline_inputs(inputs={"tokenize_by_word": tokenize == "word"})
             print("PROCESSING STEP: 'tokenization'")
-            with st.spinner('Tokenizing corpus, this might take a while...'):
+            with st.spinner('Tokenizing corpus, this may take a while...'):
                 tokenize_result = self.process_step("tokenization")
 
             if tokenize_result != "Success":
@@ -221,10 +209,10 @@ class TokenizationPage(PipelinePage):
         tokenized_table_value = self.get_step_outputs("tokenization").get_value_obj("tokens_array")
 
         if tokenized_table_value.item_is_valid():
-            # if the output exists, we write it as a pandas Series (since streamlit supports that natively)
-            df = tokenized_table_value.get_value_data().to_pandas()
-            st.write("### Result preview (first 50 rows)")
-            st.table(df.head(50))
+            preview_table = st.checkbox("Preview results")
+            if preview_table:
+                df = tokenized_table_value.get_value_data().to_pandas()
+                st.dataframe(df.head(50))
         else:
             st.write("No result")
 
@@ -234,37 +222,37 @@ class TextPreprocessingPage(PipelinePage):
     def run_page(self, st: DeltaGenerator):
 
         left, center, right = st.columns([2, 4, 2])
-        left.write("#### 1. Lowercase")
+        left.write("##### 1. Lowercase")
         lowercase = left.checkbox("Convert to lowercase")
         # isalnum,isalph,isdigit
-        center.write("#### 2. Numbers and punctuation")
-        remove_alphanumeric = center.checkbox("Remove all tokens that include numbers (e.g. ex1ample).")
-        remove_non_alpha = center.checkbox("Remove all tokens that include punctuation and numbers (e.g. ex1a.mple).")
-        remove_all_numeric = center.checkbox("Remove all tokens that contain numbers only (e.g. 876).")
+        center.write("##### 2. Numbers and punctuation")
+        remove_alphanumeric = center.checkbox("Remove all words that contain numbers (e.g. ex1ample)")
+        remove_non_alpha = center.checkbox("Remove all words that contain punctuation and numbers (e.g. ex1a.mple)")
+        remove_all_numeric = center.checkbox("Remove numbers only (e.g. 876)")
 
-        right.write("#### 3. Words length")
+        right.write("##### 3. Words length")
         display_shorttokens = [0, 1, 2, 3, 4, 5]
         def _temp(token_len):
             if token_len == 0:
-                return "Incl. all words"
+                return "Select number of characters"
             else:
                 return str(token_len)
         shorttokens = right.selectbox(
-            "Remove words shorter than ... characters",
+            "Remove words shorter than X characters",
             options=display_shorttokens,
             format_func=lambda x: _temp(x),
         )
 
-        st.write("#### 4. Remove stopwords")
+        st.write("##### 4. Remove stopwords")
         all_stopword_languages = get_stopwords().fileids()
-        languages = st.multiselect("Include stopwords for languages...", options=sorted(all_stopword_languages), help="This downloads stopword lists included in the nltk package.")
+        languages = st.multiselect("Select the preferred language(s) for the stopword list(s) (NLTK)", options=sorted(all_stopword_languages))
         if languages:
             stopwords_op = st.kiara.get_operation("playground.markus.topic_modeling.assemble_stopwords")
             stopword_result = stopwords_op.run(languages=languages)
             stopword_list = stopword_result.get_value_data("stopwords")
         else:
             stopword_list = []
-        stopword_expander = st.expander("Current stopwords")
+        stopword_expander = st.expander("Selected stopwords")
         if stopword_list:
             stopword_expander.dataframe(stopword_list)
         else:
@@ -289,13 +277,13 @@ class TextPreprocessingPage(PipelinePage):
                 "remove_stopwords": stopword_list
             }
             preview = preview_op.run(token_lists=sample_token_array, **inputs)
-        preview_pre_processing = st.checkbox("Preview randomly sampled data (using current inputs)", value=True)
+        preview_pre_processing = st.checkbox("Test settings on a sample", value=True)
         if preview_pre_processing and preview:
-            st.table(preview.get_value_data("preprocessed_token_lists").to_pandas())
+            st.dataframe(preview.get_value_data("preprocessed_token_lists").to_pandas())
         elif preview_pre_processing:
             st.write("No data (yet).")
 
-        confirmation = st.button("Proceed")
+        confirmation = st.button("Confirm")
 
         if confirmation:
 
@@ -324,8 +312,9 @@ class TextPreprocessingPage(PipelinePage):
         if preprocessed_table_value.item_is_valid():
             # if the output exists, we write it as a pandas Series (since streamlit supports that natively)
             df = preprocessed_table_value.get_value_data().to_pandas()
-            st.write("### Result preview (first 50 rows)")
-            st.table(df.head(50))
+            preview= st.checkbox("Preview results", value=True)
+            if preview:
+                st.dataframe(df.head(50))
         else:
             st.write("No result")
 
@@ -351,7 +340,7 @@ class LDAPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
 
-        st.write("Here Lorella would write some explanation about what is happening, and why.")
+        st.write("You can now train your topic model. If 'Compute coherence' is selected, you can train several models within a range decided by you. The coherence score assesses the composition of the topics based on how interpretable they are (Röder, Both and Hinneburg 2015). The highest coherence value would indicate the 'optimal' number of topics, as displayed in the coherence chart below. Please notice that a mathematically more accurate number does not automatically entail that the topics will be more interpretable (Jacobi et al., 2015, p. 7). You can decide the number of topics without computing coherence by unselecting 'Compute coherence'.")
 
         compute_coherence = st.checkbox("Compute coherence")
         if not compute_coherence:
@@ -361,10 +350,10 @@ class LDAPage(PipelinePage):
             number_of_topics_range = st.slider("Number of topics", 0, 40, (3, 25))
             number_of_topics_min, number_of_topics_max = number_of_topics_range
 
-        button = st.button("Generate LDA")
+        button = st.button("Generate topics")
         if button:
             self.pipeline.inputs.set_values(number_of_topics_min=number_of_topics_min, number_of_topics_max=number_of_topics_max, compute_coherence=compute_coherence)
-            with st.spinner("Generating LDA, this might take a while..."):
+            with st.spinner("Generating topics, this may take a while..."):
                 self.process_step("generate_lda")
 
         topic_models = self.get_step_outputs("generate_lda").get_value_obj(
@@ -485,14 +474,54 @@ onboarded = onboard_files(_kiara=st.kiara)
 main_pipeline = os.path.join(pipelines_folder, "tm_pipeline.yaml")
 
 app = PipelineApp.create(
-    pipeline=main_pipeline, config={"show_pipeline_status": True, "show_prev_and_next_buttons": True}
+    pipeline=main_pipeline, config={"show_pipeline_status": False, "show_prev_and_next_buttons": True}
 )
 
 if not app.pages:
-    app.add_page(AugmentCorpusMetadataPage(id="Prepare qualified table"))
-    app.add_page(TimestampedCorpusPage(id="Timestamped data"))
+    app.add_page(AugmentCorpusMetadataPage(id="Prepare your qualified table"))
+    app.add_page(TimestampedCorpusPage(id="Visualise your corpus composition"))
     app.add_page(TokenizationPage(id="Tokenization"))
     app.add_page(TextPreprocessingPage(id="Text pre-processing"))
     # app.add_page(LemmatizeTextPage(id="Lemmatize"))
-    app.add_page(LDAPage(id="LDA"))
+    app.add_page(LDAPage(id="Prepare your topic model"))
 app.run()
+
+def pipeline_status(
+        pipeline, container: DeltaGenerator = st
+    ) -> None:
+
+        md = "### **Inputs**\n"
+        for stage, fields in pipeline.get_pipeline_inputs_by_stage().items():
+            md = f"{md}\n"
+            for field in fields:
+                value = pipeline.inputs[field]
+                md = f"{md}* **{field}**: *{value.item_status()}*\n"
+
+        md = f"\n{md}### **Steps**\n"
+        for stage, steps in pipeline.get_steps_by_stage().items():
+            md = f"{md}\n"
+            for step_id in steps.keys():
+                job_details = pipeline._controller.get_job_details(step_id)
+                if job_details is None:
+                    status = "not run yet"
+                elif job_details.status == JobStatus.FAILED:
+                    status = "failed"
+                else:
+                    status = "finished"
+
+                md = f"{md}* **{step_id}**: *{status}*\n"
+
+        md = f"\n{md}### **Outputs**\n"
+        for stage, fields in pipeline.get_pipeline_outputs_by_stage().items():
+            md = f"{md}\n"
+            for field in fields:
+                value = pipeline.outputs[field]
+                status = "ready" if value.is_set else "not ready"
+                md = f"{md}* **{field}**: *{status}*\n"
+
+        container.markdown(md)
+
+expander_moduleinfo = st.sidebar.expander(label="Workflow status")
+
+with expander_moduleinfo:
+    pipeline_status(pipeline=app.pipeline)
