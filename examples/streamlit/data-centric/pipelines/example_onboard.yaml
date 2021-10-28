@@ -1,0 +1,13 @@
+module_type_name: tm_data_onboard
+steps:
+  - module_type: file_bundle.import_from.local.folder_path
+    step_id: import_file_bundle
+  - module_type: file_bundle.convert_to.table
+    step_id: create_table
+    input_links:
+      value_item: import_file_bundle.value_item
+input_aliases:
+    import_file_bundle__source: corpus_path
+output_aliases:
+    import_file_bundle__value_item: corpus_file_bundle
+    create_table__value_item: corpus_table
