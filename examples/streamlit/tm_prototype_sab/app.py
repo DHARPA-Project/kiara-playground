@@ -182,9 +182,17 @@ class TimestampedCorpusPage(PipelinePage):
 class TokenizationPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
+
+        #container.markdown("## Metadata")
+        #st.kiara.write_module_type_metadata(module=module, container=container)
+        #container.markdown("## Source")
+        #st.kiara.write_module_processing_code(module=module, container=container)
+
+        step = self.pipeline.get_step("tokenization")
+        module = step.module
         
-        #expander = st.expander("Module info")
-        #st.kiara.write_module_info_page(module="playground.mariella.language.tokenize", container=expander)
+        expander = st.expander("Module info")
+        write_module_info_page(module=module, container=expander)
 
         st.write(
             "For latin-based languages, the default tokenization option is by word"
@@ -485,6 +493,42 @@ if not app.pages:
     # app.add_page(LemmatizeTextPage(id="Lemmatize"))
     app.add_page(LDAPage(id="Prepare your topic model"))
 app.run()
+
+def write_module_info_page(
+        module, container: DeltaGenerator = st
+    ) -> None:
+        """Write all available information for a module."""
+
+        full_doc = module.get_type_metadata().documentation.full_doc
+
+        pipeline_str = ""
+        if module.is_pipeline() and not pipeline_str == "pipeline":
+            pipeline_str = " (pipeline module)"
+        container.markdown(
+            f"##### Module documentation for: *{module._module_type_id}*{pipeline_str}"  # type: ignore
+        )
+        container.markdown(full_doc)
+
+        container.caption("Inputs")
+        
+        st.kiara.valueset_schema_info(module.input_schemas, container=container)
+
+        container.markdown("####")
+        container.caption("Outputs")
+
+        st.kiara.valueset_schema_info(
+            module.output_schemas,
+            show_required=False,
+            show_default=False,
+            container=container,
+        )
+
+        container.markdown("####")
+        container.caption("Metadata")
+        st.kiara.write_module_type_metadata(module=module, container=container)
+        container.markdown("####")
+        container.caption("Source")
+        st.kiara.write_module_processing_code(module=module, container=container)
 
 def pipeline_status(
         pipeline, container: DeltaGenerator = st
