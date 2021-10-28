@@ -16,11 +16,13 @@
       "module_config": {
         "constants": {
           "pub_name_replacement_map": {
-            "sn20211019": "Allgemeine_Zeitschrift",
-            "sn20211018": "Monatsschrift_Psychiatrie",
-            "sn20211016": "Meiji",
-            "sn20211020": "Galactic_Railroad",
-            "86655700": "American_Journal_Insanity"
+            "643490281": "Allgemeine_Zeitschrift",
+            "231010838": "Monatsschrift_Psychiatrie",
+            "962847311": "Galactic_Railroad",
+            "960954140": "Yabu_no_Naka",
+            "962191159": "Wagahai_Neko",
+            "01480148": "American_Journal_Insanity",
+            "01778663": "Asylum_Journal_Mental_Science"
           }
         }
       },
