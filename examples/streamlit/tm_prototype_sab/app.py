@@ -380,14 +380,28 @@ class LDAPage(PipelinePage):
         #     else:
         #        left.write("No coherence computed (yet).")
 
-        st.write("### Coherence map")
+        st.write("### Coherence score")
         if not compute_coherence:
             st.write("Coherence not considered.")
         else:
             if not coherence_map.is_none:
                 c_map = coherence_map.get_value_data()
+                
                 df_coherence = pd.DataFrame(c_map.keys(), columns=['Number of topics'])
                 df_coherence['Coherence'] = c_map.values()
+
+                print(df_coherence.info())
+
+                st.vega_lite_chart(df_coherence, {
+                    "mark": {"type": "line", "point": True, "tooltip": True},
+                    "encoding": {
+                        "x": {"field": "Number of topics", "type": "quantitative", "axis": {"format": ".0f"}},
+                        "y": {"field": "Coherence", "type": "quantitative", "format": ".3f"}
+                    }
+                    
+                },use_container_width=True)
+
+                # .0f
 
                 st.table(df_coherence)
             else:
