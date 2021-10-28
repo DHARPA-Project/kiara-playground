@@ -787,6 +787,7 @@
 
 
 
+
   <div class="doc doc-object doc-class">
 
 
@@ -855,13 +856,13 @@
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_config_value</span><span class="p">(</span><span class="s2">&quot;allow_column_filter&quot;</span><span class="p">):</span>
-
-        <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;doc&quot;</span><span class="p">:</span> <span class="s2">&quot;If provided, only import the columns that match items in this list.&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;optional&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="p">}</span>
+    <span class="c1"># if self.get_config_value(&quot;allow_column_filter&quot;):</span>
+    <span class="c1">#</span>
+    <span class="c1">#     inputs[&quot;columns&quot;] = {</span>
+    <span class="c1">#         &quot;type&quot;: &quot;array&quot;,</span>
+    <span class="c1">#         &quot;doc&quot;: &quot;If provided, only import the columns that match items in this list.&quot;,</span>
+    <span class="c1">#         &quot;optional&quot;: False,</span>
+    <span class="c1">#     }</span>
 
     <span class="k">return</span> <span class="n">inputs</span>
 </code></pre></div>
