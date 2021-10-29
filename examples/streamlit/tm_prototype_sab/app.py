@@ -495,18 +495,7 @@ onboarded = onboard_files(_kiara=st.kiara)
 
 main_pipeline = os.path.join(pipelines_folder, "tm_pipeline.yaml")
 
-app = PipelineApp.create(
-    pipeline=main_pipeline, config={"show_pipeline_status": False, "show_prev_and_next_buttons": True}
-)
 
-if not app.pages:
-    app.add_page(AugmentCorpusMetadataPage(id="Prepare your qualified table"))
-    app.add_page(TimestampedCorpusPage(id="Visualise your corpus composition"))
-    app.add_page(TokenizationPage(id="Tokenization"))
-    app.add_page(TextPreprocessingPage(id="Text pre-processing"))
-    # app.add_page(LemmatizeTextPage(id="Lemmatize"))
-    app.add_page(LDAPage(id="Prepare your topic model"))
-app.run()
 
 def write_module_info_page(
         module, container: DeltaGenerator = st
@@ -578,6 +567,19 @@ def pipeline_status(
                 md = f"{md}* **{field}**: *{status}*\n"
 
         container.markdown(md)
+
+app = PipelineApp.create(
+    pipeline=main_pipeline, config={"show_pipeline_status": False, "show_prev_and_next_buttons": True}
+)
+
+if not app.pages:
+    app.add_page(AugmentCorpusMetadataPage(id="Prepare your qualified table"))
+    app.add_page(TimestampedCorpusPage(id="Visualise your corpus composition"))
+    app.add_page(TokenizationPage(id="Tokenization"))
+    app.add_page(TextPreprocessingPage(id="Text pre-processing"))
+    # app.add_page(LemmatizeTextPage(id="Lemmatize"))
+    app.add_page(LDAPage(id="Prepare your topic model"))
+app.run()
 
 expander_moduleinfo = st.sidebar.expander(label="Workflow status")
 
