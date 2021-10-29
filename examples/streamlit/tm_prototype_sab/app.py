@@ -391,11 +391,12 @@ class LDAPage(PipelinePage):
                 df_coherence['Coherence'] = c_map.values()
 
                 print(df_coherence.info())
+                print(len(df_coherence))
 
                 st.vega_lite_chart(df_coherence, {
                     "mark": {"type": "line", "point": True, "tooltip": True},
                     "encoding": {
-                        "x": {"field": "Number of topics", "type": "quantitative", "axis": {"format": ".0f"}},
+                        "x": {"field": "Number of topics", "type": "quantitative", "axis": {"format": ".0f", "tickCount": len(df_coherence)-1}},
                         "y": {"field": "Coherence", "type": "quantitative", "format": ".3f"}
                     }
                     
