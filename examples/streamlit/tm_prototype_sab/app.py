@@ -404,6 +404,17 @@ class LDAPage(PipelinePage):
                 # .0f
 
                 st.table(df_coherence)
+                save = st.checkbox("Save coherence table", key=self.get_page_key("save_selected_model"))
+                if save:
+                    alias = st.text_input("Alias")
+                    save_btn = st.button("Save")
+                    if save_btn:
+                        if not alias:
+                            st.info("Not saving table, no alias provided.")
+                        else:
+                            saved = coherence_table.save(aliases=[alias])
+                            st.info(f"Coherence table saved with alias '{alias}', value id: {saved.id}")
+
             else:
                 st.write("No coherence computed (yet).")
 
