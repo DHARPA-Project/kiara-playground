@@ -4,7 +4,6 @@ import os
 
 import pandas as pd
 import streamlit as st
-from st_aggrid import AgGrid, GridOptionsBuilder
 from streamlit.delta_generator import DeltaGenerator
 from streamlit_observable import observable
 
@@ -400,7 +399,7 @@ class LDAPage(PipelinePage):
                         "y": {"field": "Coherence", "type": "quantitative", "format": ".3f"}
                     }
                     
-                },use_container_width=True)
+                }, use_container_width=True)
 
                 # .0f
 
