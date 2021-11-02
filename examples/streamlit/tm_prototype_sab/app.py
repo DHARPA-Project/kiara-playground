@@ -351,11 +351,11 @@ class LDAPage(PipelinePage):
 
         compute_coherence = st.checkbox("Compute coherence")
         if not compute_coherence:
-            number_of_topics_min = st.slider("Number of topics", min_value=1, max_value=40, value=7)
+            number_of_topics_min = st.number_input('Number of topics', min_value = 1, value=7)
             number_of_topics_max = number_of_topics_min
         else:
-            number_of_topics_range = st.slider("Number of topics", 0, 40, (3, 25))
-            number_of_topics_min, number_of_topics_max = number_of_topics_range
+            number_of_topics_min = st.number_input('Min number of topics', min_value = 1, value=4)
+            number_of_topics_max = st.number_input('Max number of topics', min_value=1, value=7)
 
         button = st.button("Generate topics")
         if button:
@@ -389,8 +389,6 @@ class LDAPage(PipelinePage):
                 df_coherence = pd.DataFrame(c_map.keys(), columns=['Number of topics'])
                 df_coherence['Coherence'] = c_map.values()
 
-                print(df_coherence.info())
-                print(len(df_coherence))
 
                 st.vega_lite_chart(df_coherence, {
                     "mark": {"type": "line", "point": True, "tooltip": True},
