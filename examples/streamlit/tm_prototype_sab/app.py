@@ -594,3 +594,36 @@ expander_moduleinfo = st.sidebar.expander(label="Workflow status")
 
 with expander_moduleinfo:
     pipeline_status(pipeline=app.pipeline)
+
+html_string = '''
+<style>
+    .contributors {
+        padding-top: 20%;
+        font-size: .8em;
+    }
+    .contributors h3 {
+        font-size: 1.2em;
+        padding-bottom: 0.5em;}
+    .uni {
+        font-size: .9em;
+        font-style: italic;
+        padding-top:0.5em;
+        
+    }
+</style>
+<html>
+    <div class="contributors">
+        <h3>Created by:</h3>
+        Dr Lorella Viola <br>
+        Markus Binsteiner <br>
+        Mariella De Crouy Chanel<br>
+        <p class="uni">
+    C2DH/University of Luxembourg
+    </p>
+    </div>
+    
+</html>
+'''
+
+st.sidebar.write(html_string, unsafe_allow_html=True)
+
