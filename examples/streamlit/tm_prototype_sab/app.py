@@ -31,8 +31,10 @@ class AugmentCorpusMetadataPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
         st.caption('A qualified table is a table prepared for Kiara')
+        st.info('User story: "I, as a workflow user, want to be able to record, maintain and share metadata that helps computational processes understand the type and schema of research data, so it can be used effectively as an input for a workflow."')
+
         selected_table: Value = st.kiara.value_input_table(label="Select table", add_no_value_option=True, onboard_options={"enabled": True, "source_default": "folder"}, key=self.get_page_key("selected_table"))
-                
+                        
         preview_table = st.checkbox("Preview table")
         if selected_table and selected_table.item_is_valid():
             if preview_table:
@@ -75,6 +77,8 @@ class TimestampedCorpusPage(PipelinePage):
     def run_page(self, st: DeltaGenerator):
 
         # this is basically unchanged from the other prototype, since it doesn't involve any processing on the actual workflow
+
+        st.info('User story: "I, as a workflow developer or user, want to create one or several visualizations that make my sources easier to understand, and others (or myself) can interact with."')
 
         augmented_table_value = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
 
@@ -187,6 +191,8 @@ class TokenizationPage(PipelinePage):
         #container.markdown("## Source")
         #st.kiara.write_module_processing_code(module=module, container=container)
 
+        st.info('User story: "I, as a workflow user, want to be able to keep track of every processing step a piece of data goes through, so I can refer back to this later on, and if necessary be able to re-process the source data."')
+
         step = self.pipeline.get_step("tokenization")
         module = step.module
         
@@ -228,6 +234,10 @@ class TextPreprocessingPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
 
+        st.info('User story: "I, as a workflow developer or user, want to preprocess my data so it can be used in subsequent steps."')
+        st.info('User story: "I, as a workflow user, would like to see the output of a data process in the context of my dataframe [...]. This would help me explore the preview of a given data process to help me make a critical decision, before applying the process(es)/method(s) to my entire dataframe."')
+
+        
         left, center, right = st.columns([2, 4, 2])
         left.write("##### 1. Lowercase")
         lowercase = left.checkbox("Convert to lowercase")
@@ -347,6 +357,8 @@ class LDAPage(PipelinePage):
 
     def run_page(self, st: DeltaGenerator):
 
+        st.info('User story: "I, as a workflow user, want to save the intermediate outputs in an exportable and publishable format (e.g., csv)"')
+        
         st.write("You can now train your topic model. If 'Compute coherence' is selected, you can train several models within a range decided by you. The coherence score assesses the composition of the topics based on how interpretable they are (Röder, Both and Hinneburg 2015). The highest coherence value would indicate the 'optimal' number of topics, as displayed in the coherence chart below. Please notice that a mathematically more accurate number does not automatically entail that the topics will be more interpretable (Jacobi et al., 2015, p. 7). You can decide the number of topics without computing coherence by unselecting 'Compute coherence'.")
 
         compute_coherence = st.checkbox("Compute coherence")
