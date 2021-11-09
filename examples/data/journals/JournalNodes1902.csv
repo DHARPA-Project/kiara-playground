@@ -1,4 +1,4 @@
-﻿Id,Label,JournalType,City,CountryNetworkTime,PresentDayCountry,Latitude,Longitude,Language
+Id,Label,JournalType,City,CountryNetworkTime,PresentDayCountry,Latitude,Longitude,Language
 75,Psychiatrische en neurologische bladen,specialized: psychiatry and neurology,Amsterdam,Netherlands,Netherlands,52.366667,4.9,Dutch
 36,The American Journal of Insanity,specialized: psychiatry and neurology,Baltimore,United States,United States,39.289444,-76.615278,English
 208,The American Journal of Psychology,specialized: psychology,Baltimore,United States,United States,39.289444,-76.615278,English
@@ -50,10 +50,10 @@
 39,Archives de Psychologie de la Suisse Romande,specialized: psychology,Geneva,Switzerland,Switzerland,46.2,6.15,French
 70,Annales de la Société de médecine de Gand,general medicine,Ghent,Belgium,Belgium,51.053611,3.725278,French
 289,Glasgow medical journal,general medicine,Glasgow,British Empire,United Kingdom,55.860916,-4.251433,English
-40,Psychiatrische Wochenschrift,specialized: psychiatry and neurology,Halle (Saale),German Empire,Germany,51.482778,11.969722,German
-117,Klinik für psychische und nervöse Krankheiten,specialized: psychiatry and neurology,Halle (Saale),German Empire,Germany,51.482778,11.969722,German
+40,Psychiatrische Wochenschrift,specialized: psychiatry and neurology,Halle,German Empire,Germany,51.482778,11.969722,German
+117,Klinik für psychische und nervöse Krankheiten,specialized: psychiatry and neurology,Halle ,German Empire,Germany,51.482778,11.969722,German
 46,Zeitschrift für Psychologie und Physiologie der Sinnesorgane,specialized: psychology,Hamburg,German Empire,Germany,53.565278,10.001389,German
-282,The Quarterly Journal of Inebriety,specialized: alcoholism,Hartford (Connecticut),United States,United States,41.7625,-72.674167,English
+282,The Quarterly Journal of Inebriety,specialized: alcoholism,Hartford,United States,United States,41.7625,-72.674167,English
 74,Der Irrenfreund,specialized: psychiatry and neurology,Heilbronn,German Empire,Germany,49.15,9.216667,German
 186,廣島衛生醫事月報,general medicine,Hiroshima,Japanese Empire,Japan,34.383333,132.45,Japanese
 2,Anatomischer Anzeiger,"specialized: anatomy, physiology and pathology",Jena,German Empire,Germany,50.927222,11.586111,German
@@ -119,7 +119,7 @@
 41,"Rivista mensile di psichiatria forense, antropologia criminale, e scienze affini","specialized: anthropology, criminology and forensics",Naples,Italy,Italy,40.845,14.258333,Italian
 89,La Riforma medica,general medicine,Naples,Italy,Italy,40.845,14.258333,Italian
 90,Il Manicomio,specialized: psychiatry and neurology,Naples,Italy,Italy,40.845,14.258333,Italian
-284,Studies from the Yale Psychological Laboratory,specialized: psychology,New Haven (Connecticut),United States,United States,41.31,-72.923611,English
+284,Studies from the Yale Psychological Laboratory,specialized: psychology,New Haven,United States,United States,41.31,-72.923611,English
 302,Archives of pediatrics : a monthly devoted to the diseases of infants and children,specialized: pedagogy and pediatrics,New York,United States,United States,40.71274,-74.005974,English
 305,The Journal of Mental Pathology,specialized: psychiatry and neurology,New York,United States,United States,40.71274,-74.005974,English
 24,New-York Medical Journal,general medicine,New York,United States,United States,40.71274,-74.005974,English
