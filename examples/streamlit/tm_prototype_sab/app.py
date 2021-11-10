@@ -279,10 +279,10 @@ class TextPreprocessingPage(PipelinePage):
 
         preview = None
         if tokens.item_is_valid():
-            sample_op = st.kiara.get_operation("array.sample.rows")
+            sample_op = st.kiara.get_operation("sample.array.rows")
             sample_token_array = self._cache.get("preprocess_sample_array", None)
             if not sample_token_array:
-                sample_token_array = sample_op.run(value_item=tokens, sample_size=7).get_value_obj("sampled_value")
+                sample_token_array = sample_op.run(array=tokens, sample_size=7).get_value_obj("sampled_value")
                 self._cache["preprocess_sample_array"] = sample_token_array
             preview_op = st.kiara.get_operation("playground.markus.topic_modeling.preprocess")
             inputs = {
