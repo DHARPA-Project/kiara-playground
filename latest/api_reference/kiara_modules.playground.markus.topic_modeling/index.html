@@ -333,6 +333,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../kiara_modules.playground.angela/" class="md-nav__link">
+        ➜ angela
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../kiara_modules.playground.lena/" class="md-nav__link">
         ➜ lena
       </a>
@@ -993,15 +1007,15 @@
 
       <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[input_field_name]: {
-      "type": "[value_type]",
-      "doc<em>": "[a description of this input]",
-      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[input_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this input]",
+          "optional*': [boolean whether this input is optional or required (defaults to 'False')]
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1045,14 +1059,14 @@
 
       <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[output_field_name]: {
-      "type": "[value_type]",
-      "doc*": "[a description of this output]"
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[output_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this output]"
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1127,15 +1141,15 @@
 
       <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[input_field_name]: {
-      "type": "[value_type]",
-      "doc<em>": "[a description of this input]",
-      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[input_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this input]",
+          "optional*': [boolean whether this input is optional or required (defaults to 'False')]
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1174,14 +1188,14 @@
 
       <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[output_field_name]: {
-      "type": "[value_type]",
-      "doc*": "[a description of this output]"
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[output_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this output]"
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1261,15 +1275,15 @@
 
       <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[input_field_name]: {
-      "type": "[value_type]",
-      "doc<em>": "[a description of this input]",
-      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[input_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this input]",
+          "optional*': [boolean whether this input is optional or required (defaults to 'False')]
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1325,14 +1339,14 @@
 
       <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[output_field_name]: {
-      "type": "[value_type]",
-      "doc*": "[a description of this output]"
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[output_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this output]"
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1422,15 +1436,15 @@ a spacy <a href="https://spacy.io/api/language#pipe">pipe</a> under the hood.</p
 
       <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[input_field_name]: {
-      "type": "[value_type]",
-      "doc<em>": "[a description of this input]",
-      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[input_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this input]",
+          "optional*': [boolean whether this input is optional or required (defaults to 'False')]
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1465,14 +1479,14 @@ a spacy <a href="https://spacy.io/api/language#pipe">pipe</a> under the hood.</p
 
       <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[output_field_name]: {
-      "type": "[value_type]",
-      "doc*": "[a description of this output]"
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[output_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this output]"
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1553,15 +1567,15 @@ a spacy <a href="https://spacy.io/api/language#pipe">pipe</a> under the hood.</p
 
       <p>Abstract method to implement by child classes, returns a description of the input schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[input_field_name]: {
-      "type": "[value_type]",
-      "doc<em>": "[a description of this input]",
-      "optional</em>': [boolean whether this input is optional or required (defaults to 'False')]
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[input_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this input]",
+          "optional*': [boolean whether this input is optional or required (defaults to 'False')]
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
@@ -1629,14 +1643,14 @@ a spacy <a href="https://spacy.io/api/language#pipe">pipe</a> under the hood.</p
 
       <p>Abstract method to implement by child classes, returns a description of the output schema of this module.</p>
 <p>If returning a dictionary of dictionaries, the format of the return value is as follows (items with '*' are optional):</p>
-<p>{
-  "[output_field_name]: {
-      "type": "[value_type]",
-      "doc*": "[a description of this output]"
-  "[other_input_field_name]: {
-      "type: ...
-      ...
-  }</p>
+<p><code>{
+      "[output_field_name]: {
+          "type": "[value_type]",
+          "doc*": "[a description of this output]"
+      "[other_input_field_name]: {
+          "type: ...
+          ...
+      }</code></p>
 
         <details class="quote">
           <summary>Source code in <code>playground/markus/topic_modeling.py</code></summary>
