@@ -82,9 +82,6 @@ class TimestampedCorpusPage(PipelinePage):
 
         augmented_table_value = self.get_step_outputs("augment_corpus_data").get_value_obj("table")
 
-
-        #st.write(self.pipeline.get_current_state().dict())
-
         if not augmented_table_value.item_is_valid():
 
             st.write("Augmented table not created yet, please do so before continuing.")
