@@ -78,7 +78,7 @@ def app():
     map_points = observable(
             "geolocation map",
             notebook="@mariellacc/geolocation",
-            targets=["container", "svgLayer", "canvasLayer"],
+            targets=["container", "svgLayer", "canvasLayer", "tooltip"],
             redefine={ 
                 "userData": cleaned_data,
                 "mapData": map_json,
