@@ -16,17 +16,29 @@
       "module_config": {
         "constants": {
           "pub_name_replacement_map": {
+            "sn85066408": "L\\'Italia",
+            "2012271201": "Cronaca Sovversiva",
+            "sn84020351": "La Sentinella",
+            "sn85054967": "Il Patriota",
+            "sn84037024": "La Ragione",
+            "sn84037025": "La Rassegna",
+            "sn85055164": "La Libera Parola",
+            "sn86092310": "La Sentinella del West",
+            "sn92051386": "La Tribuna del Connecticut",
+            "sn93053873": "L\\'Indipendente",
+            "01480148": "American_Journal_Insanity",
+            "01778663": "Asylum_Journal_Mental_Science",
             "643490281": "Allgemeine_Zeitschrift",
             "231010838": "Monatsschrift_Psychiatrie",
             "643477787": "Neurologisches Centralblatt",
             "192001955": "Archiv für Psychiatrie und Nervenkrankheiten",
             "311094004": "Deutsche Zeitschrift für Nervenheilkunde",
             "183308558 ": "Psychiatrische Wochenschrift",
+            "679344337": "Archiv_psikhiatrii",
             "962847311": "Galactic_Railroad",
             "960954140": "Yabu_no_Naka",
             "962191159": "Wagahai_Neko",
-            "01480148": "American_Journal_Insanity",
-            "01778663": "Asylum_Journal_Mental_Science"
+            "962846445": "Makioka Sisters"
           }
         }
       },

@@ -1,0 +1,40 @@
+module_type_name: tm_pipeline
+steps:
+  - module_type: extra.corpus_table_augment
+    step_id: augment_corpus_data
+  - module_type: playground.mariella.language.tokenize
+    module_config:
+      constants:
+        column_name: content
+    step_id: tokenization
+    input_links:
+      table: augment_corpus_data.table
+  - module_type: playground.markus.topic_modeling.preprocess
+    step_id: text_pre_processing
+    input_links:
+      token_lists: tokenization.tokens_array
+  - module_type: playground.markus.topic_modeling.LDA
+    step_id: generate_lda
+    input_links:
+      tokens_array: text_pre_processing.preprocessed_token_lists
+input_aliases:
+  augment_corpus_data__table: corpus_table
+  tokenization__tokenize_by_word: tokenize_by_word
+  text_pre_processing__token_lists: token_lists
+  text_pre_processing__to_lowercase: to_lowercase
+  text_pre_processing__remove_short_tokens: remove_short_tokens
+  text_pre_processing__remove_alphanumeric: remove_alphanumeric
+  text_pre_processing__remove_non_alpha: remove_non_alpha
+  text_pre_processing__remove_all_numeric: remove_all_numeric
+  text_pre_processing__remove_stopwords: remove_stopwords
+  generate_lda__compute_coherence: compute_coherence
+  generate_lda__num_topics_min: number_of_topics_min
+  generate_lda__num_topics_max: number_of_topics_max
+  generate_lda__words_per_topic: words_per_topic
+output_aliases:
+  generate_lda__topic_models: topic_models
+  generate_lda__coherence_table: coherence_table
+#  lemmatize__tokens_array: lemmatized_array
+#  augment_corpus_data__table: corpus_table
+#  text_pre_processing__preprocessed_token_lists: preprocessed_token_lists
+
