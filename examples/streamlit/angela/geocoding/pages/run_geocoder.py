@@ -20,20 +20,20 @@ def app():
     if button:
 
         file_import_operation = kiara.get_operation(
-            "file.import_from.local.file_path"
+            "import.file.from.file_path"
         )
 
-        import_result = file_import_operation.module.run(source=path)
-        imported_file = import_result.get_value_obj("value_item")
+        import_result = file_import_operation.module.run(file_path=path)
+        imported_file = import_result.get_value_obj("file")
 
         alias = "my_first_table" 
         imported_file.save(
             aliases=[f"{alias}__source_files"]
         )  
 
-        table_convert_module = kiara.create_module("file.convert_to.table", module_config={"source_type": "file", "target_type": "table", "ignore_errors": True})
-        convert_result = table_convert_module.run(value_item=imported_file)
-        imported_table = convert_result.get_value_obj("value_item")
+        table_convert_module = kiara.create_module("create.table.from.csv_file", module_config={"source_type": "file", "target_type": "table", "ignore_errors": True})
+        convert_result = table_convert_module.run(csv_file=imported_file)
+        imported_table = convert_result.get_value_obj("table")
 
         imported_table.save(aliases=[alias])
 

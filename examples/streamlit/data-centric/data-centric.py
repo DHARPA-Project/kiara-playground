@@ -178,10 +178,10 @@ class TextPreprocessingPage(OperationPage):
 
         preview = None
         if value.item_is_valid():
-            sample_op = st.kiara.get_operation("array.sample.rows")
+            sample_op = st.kiara.get_operation("sample.array.rows")
             sample_token_array = self._cache.get("preprocess_sample_array", None)
             if not sample_token_array:
-                sample_token_array = sample_op.run(value_item=value, sample_size=1).get_value_obj("sampled_value")
+                sample_token_array = sample_op.run(array=value, sample_size=1).get_value_obj("sampled_value")
                 self._cache["preprocess_sample_array"] = sample_token_array
             preview_op = st.kiara.get_operation("playground.markus.topic_modeling.preprocess")
             inputs = {

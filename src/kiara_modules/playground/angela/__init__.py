@@ -83,32 +83,42 @@ class GeoCode(KiaraModule):
         raw_table_value=inputs.get_value_obj("raw_table")
         raw_table_obj: pa.Table=raw_table_value.get_value_data()
 
-        #what if don't have address?
+        raw_pandas=raw_table_obj.to_pandas()
         
+#get just columns to use in geocoding        
         city_column=inputs.get_value_data("city_column")
         country_column=inputs.get_value_data("country_column")
         
 
         min_table= raw_table_obj.select((city_column, country_column))
-        pandas_table=min_table.to_pandas()
+        just_locs=min_table.to_pandas()
+        
+        #reduce geocoding load by only running unique placenames:
+        just_locs_dd=just_locs.drop_duplicates(subset=[city_column,country_column])
+        
             
-        pandas_table["geocoderesult"] = pandas_table.apply(
+        just_locs_dd["geocoderesult"] = just_locs_dd.apply(
             lambda row: Ngeocode(
                 {
-                    "city": row["city_column"],
-                    "country": row["country_column"],
+                    "city": row[city_column],
+                    "country": row[country_column],
                 },
                 language="en",
                 addressdetails=True,
             ).raw,
             axis=1,
         )
+
+
+        just_locs_dd['longitude'] = just_locs_dd['geocoderesult'].apply(lambda x: (x['lon']) if x else None)
+        just_locs_dd['latitude'] = just_locs_dd['geocoderesult'].apply(lambda x: (x['lat']) if x else None)
+
+#reattach results to original table:
+        pandas_table_out = raw_pandas.merge(just_locs_dd, left_on=[city_column,country_column],right_on=[city_column,country_column], how='left')
         
-        pandas_table['longitude'] = pandas_table['geocoderesult'].apply(lambda x: (x.point[1]) if x else None)
-        pandas_table['latitude'] = pandas_table['geocoderesult'].apply(lambda x: (x.point[0]) if x else None)
 
 #back to pyarrow
-        result_table: pa.Table.from_pandas(pandas_table)
+        result_table= pa.Table.from_pandas(pandas_table_out)
 
         outputs.set_values(geocoded_table=result_table)
         

@@ -1,13 +1,13 @@
 module_type_name: tm_data_onboard
 steps:
-  - module_type: file_bundle.import_from.local.folder_path
+  - module_type: import.file_bundle.from.folder_path
     step_id: import_file_bundle
-  - module_type: file_bundle.convert_to.table
+  - module_type: create.table.from.text_file_bundle
     step_id: create_table
     input_links:
-      value_item: import_file_bundle.value_item
+      text_file_bundle: import_file_bundle.file_bundle
 input_aliases:
-    import_file_bundle__source: corpus_path
+    import_file_bundle__folder_path: corpus_path
 output_aliases:
-    import_file_bundle__value_item: corpus_file_bundle
-    create_table__value_item: corpus_table
+    import_file_bundle__text_file_bundle: corpus_file_bundle
+    create_table__table: corpus_table
