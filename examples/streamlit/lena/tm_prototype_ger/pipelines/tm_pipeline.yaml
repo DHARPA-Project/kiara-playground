@@ -13,7 +13,7 @@ steps:
     step_id: text_pre_processing
     input_links:
       token_lists: tokenization.tokens_array
-  - module_type: playground.markus.topic_modeling.LDA
+  - module_type: playground.lena.topic_modeling.LDA
     step_id: generate_lda
     input_links:
       tokens_array: text_pre_processing.preprocessed_token_lists
